@@ -30,14 +30,14 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
     dplyr::filter(!!event_ == 0) %>%
-    dplyr::mutate(rank = seq(1:n()))
+    dplyr::mutate(rank = base::seq(1:base::n()))
   
   if (simplified) {
     df <- df %>%
-      dplyr::mutate(F_i = rank / (n() + 1))
+      dplyr::mutate(F_i = rank / (base::n() + 1))
   } else if (!simplified) {
     df <- df %>%
-      dplyr::mutate(F_i = (rank - 0.3) / (n() + 0.4))
+      dplyr::mutate(F_i = (rank - 0.3) / (base::n() + 0.4))
   } else {
     warning("Invalid input for parameter 'simplified'!")
     return(in_data)
@@ -86,12 +86,12 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
     dplyr::filter(!!event_ == 0) %>%
     dplyr::arrange(!!time_)
   
-  df["rank"] <- c(1, rep(0, dim(df)[1] - 1))
+  df["rank"] <- c(1, base::rep(0, base::dim(df)[1] - 1))
   
   N <- base::sum(df["n_sample"])
   
   # Compute average ranks following Johnson Method
-  for (i in 2:dim(df)[1]) {
+  for (i in 2:base::dim(df)[1]) {
     delta_j <- (N + 1 - df["rank"][i-1,]) / (N + 1 - base::sum(df["n_sample"][1:i-1,]))
     df["rank"][i,] <- df["rank"][i-1,] + delta_j
   }
@@ -120,11 +120,11 @@ nelson_method <- function (in_data, time = "time", event = "event") {
   
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
-    dplyr::mutate(rank = seq(n(), 1)) %>%
+    dplyr::mutate(rank = base::seq(base::n(), 1)) %>%
     dplyr::filter(!!event_ == 0) %>%
     dplyr::mutate(lambda_i = 1 / rank) %>%
-    dplyr::mutate(H_i = cumsum(lambda_i)) %>%
-    dplyr::mutate(F_i = 1 - exp(- H_i))
+    dplyr::mutate(H_i = base::cumsum(lambda_i)) %>%
+    dplyr::mutate(F_i = 1 - base::exp(- H_i))
   
   df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
 
@@ -153,14 +153,14 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
   
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
-    dplyr::mutate(n_fail = ifelse(!!event_ == 0, !!n_events_, 0)) %>%
-    dplyr::mutate(n_i = sum(!!n_events_) - base::cumsum(!!n_events_) + !!n_events_) %>%
+    dplyr::mutate(n_fail = base::ifelse(!!event_ == 0, !!n_events_, 0)) %>%
+    dplyr::mutate(n_i = base::sum(!!n_events_) - base::cumsum(!!n_events_) + !!n_events_) %>%
     dplyr::group_by(!!time_) %>%
-    dplyr::mutate(n_i = max(n_i)) %>%
+    dplyr::mutate(n_i = base::max(n_i)) %>%
     dplyr::mutate(k_i = (n_i - n_fail) / n_i) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(F_i = ifelse(!!event_ == 0, 1-cumprod(k_i), NA)) %>%
-    select(-c(n_fail, n_i, k_i))
+    dplyr::mutate(F_i = base::ifelse(!!event_ == 0, 1-base::cumprod(k_i), NA)) %>%
+    dplyr::select(-c(n_fail, n_i, k_i))
   
   return(df)
 }
