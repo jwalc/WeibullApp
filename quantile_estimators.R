@@ -106,5 +106,27 @@ johnson_method <- function (in_data, time = "time", event = "event", sample = "s
 }
 
 nelson_method <- function (in_data, time = "time", event = "event") {
+  #' @title Nelson Method for Weibull Quantile Estimation
+  #' 
+  #' Computes Weibull quantiles using the Nelson Method. Suitable for right censored data.
+  #' 
+  #' @param in_data tibble, containing time to failure and event data
+  #' @param time character, name of column containing time data
+  #' @param event character, name of column containing event type
+  #' @return tibble with added quantile estimations
   
+  time_ <- as.symbol(time)
+  event_ <- as.symbol(event)
+  
+  df <- in_data %>%
+    dplyr::arrange(!!time_) %>%
+    dplyr::mutate(rank = seq(n(), 1)) %>%
+    dplyr::filter(!!event_ == 0) %>%
+    dplyr::mutate(lambda_i = 1 / rank) %>%
+    dplyr::mutate(H_i = cumsum(lambda_i)) %>%
+    dplyr::mutate(F_i = 1 - exp(- H_i))
+  
+  df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
+
+  return(df)
 }
