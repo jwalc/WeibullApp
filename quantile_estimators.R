@@ -131,8 +131,29 @@ nelson_method <- function (in_data, time = "time", event = "event") {
   return(df)
 }
 
-kaplan_meier_method <- function (in_data, time = "time", event = "event") {
+kaplan_meier_method <- function (in_data, time = "time", event = "event", n_events = "n_events") {
   
+  time_ <- as.symbol(time)
+  event_ <- as.symbol(event)
+  n_events_ <- as.symbol(n_events)
+  
+  if (!n_events %in% names(in_data)) {
+    warning("Invalid 'n_events' argument! Assuming one event per row!")
+    in_data["n_events"] <- rep(1, dim(in_data)[1])
+  }
+  
+  df <- in_data %>%
+    dplyr::arrange(!!time_) %>%
+    dplyr::mutate(n_fail = ifelse(!!event_ == 0, !!n_events_, 0)) %>%
+    dplyr::mutate(n_i = sum(!!n_events_) - base::cumsum(!!n_events_) + !!n_events_) %>%
+    dplyr::group_by(!!time_) %>%
+    dplyr::mutate(n_i = max(n_i)) %>%
+    dplyr::mutate(k_i = (n_i - n_fail) / n_i) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(F_i = ifelse(!!event_ == 0, 1-cumprod(k_i), NA)) %>%
+    select(-c(n_fail, n_i, k_i))
+  
+  return(df)
 }
 
 johnson_method <- function (in_data, time = "time", event = "event") {
