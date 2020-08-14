@@ -53,6 +53,22 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
 }
 
 johnson_method <- function (in_data, time = "time", event = "event", sample = "sample") {
+  #' @title Johnson Sudden Death Method for Weibull Quantile Estimation
+  #' 
+  #' Computes Weibull Quantiles using Johnson's Sudden Death Method. Suitable for right censored data.
+  #' Ranks are estimated by:
+  #' rank_i = rank_(i-1) + delta_rank(i, i-1)
+  #' with delta_rank(i, i-1) = (N + 1 - rank_(i-1)) / (N + 1 - sum_m),
+  #' where N is the number of datapoints and
+  #' sum_m is the cummulative sum of sample sizes that are ranked earlier.
+  #' Quantiles are then estimated by:
+  #' F_i = (rank_i - 0.3) / (N + 0.4)
+  #' 
+  #' @param in_data tibble, containing time to failure, event and sample identification
+  #' @param time character, name of column containing time data
+  #' @param event character, name of column containing event type
+  #' @param sample character, name of column containing sample identificator
+  #' @return tibble with added columns rank and estimated quantiles
   
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
