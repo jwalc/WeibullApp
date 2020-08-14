@@ -104,3 +104,7 @@ johnson_method <- function (in_data, time = "time", event = "event", sample = "s
   
   return(df)
 }
+
+nelson_method <- function (in_data, time = "time", event = "event") {
+  
+}
