@@ -132,7 +132,16 @@ nelson_method <- function (in_data, time = "time", event = "event") {
 }
 
 kaplan_meier_method <- function (in_data, time = "time", event = "event", n_events = "n_events") {
-  
+  #' @title Kaplan-Meier Method for Weibull Quantile Estimation
+  #' 
+  #' Computes Weibull quantiles using the Kaplan-Meier Method. Suitable for right censored data.
+  #' 
+  #' @param in_data tibble, containing time to failure and data for number and type of events per timestamp
+  #' @param time character, name of the column containing time data
+  #' @param event character, name of the column containing event type
+  #' @param n_events character, name of the column containing number of events of type at timestamp
+  #' @return tibble with added quantile estimations
+
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
   n_events_ <- as.symbol(n_events)
