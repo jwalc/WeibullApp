@@ -1,4 +1,9 @@
 input_handler <- function (in_data) {
+  if (dplyr::is_tibble(in_data)) {
+    return(in_data)
+  } else {
+    # TODO handling of non tibble type
+  }
   return(in_data)
 }
 
