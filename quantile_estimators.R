@@ -54,4 +54,32 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
 
 johnson_method <- function (in_data, time = "time", event = "event", sample = "sample", simplified = FALSE) {
   
+  time_ <- as.symbol(time)
+  event_ <- as.symbol(event)
+  sample_ <- as.symbol(sample)
+  
+  df <- in_data %>%
+    dplyr::group_by(!!sample_) %>%
+    dplyr::mutate(n_sample = dplyr::n()) %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(!!event_ == 0) %>%
+    dplyr::arrange(!!time_)
+  
+  df["rank"] <- c(1, rep(0, dim(df)[1] - 1))
+  
+  N <- base::sum(df["n_sample"])
+  
+  # Compute average ranks following Johnson Method
+  for (i in 2:dim(df)[1]) {
+    delta_j <- (N + 1 - df["rank"][i-1,]) / (N + 1 - base::sum(df["n_sample"][1:i-1,]))
+    df["rank"][i,] <- df["rank"][i-1,] + delta_j
+  }
+  
+  df <- df %>%
+    dplyr::mutate(F_i = (rank - 0.3) / (N + 0.4))
+  
+  df <- dplyr::full_join(in_data, df[c(time, event, sample, "rank", "F_i")], by = c(time, event, sample)) %>%
+    dplyr::arrange(rank)
+  
+  return(df)
 }
