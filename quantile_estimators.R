@@ -52,6 +52,6 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   return(df)
 }
 
-sudden_death <- function (in_data, time = "time", event = "event", simplified = FALSE) {
+johnson_method <- function (in_data, time = "time", event = "event", sample = "sample", simplified = FALSE) {
   
 }
