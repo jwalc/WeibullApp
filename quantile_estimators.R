@@ -134,3 +134,7 @@ nelson_method <- function (in_data, time = "time", event = "event") {
 kaplan_meier_method <- function (in_data, time = "time", event = "event") {
   
 }
+
+johnson_method <- function (in_data, time = "time", event = "event") {
+  
+}
