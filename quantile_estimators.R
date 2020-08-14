@@ -52,7 +52,7 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   return(df)
 }
 
-johnson_method <- function (in_data, time = "time", event = "event", sample = "sample", simplified = FALSE) {
+johnson_method <- function (in_data, time = "time", event = "event", sample = "sample") {
   
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
