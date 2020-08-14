@@ -52,7 +52,7 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   return(df)
 }
 
-johnson_method <- function (in_data, time = "time", event = "event", sample = "sample") {
+johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample") {
   #' @title Johnson Sudden Death Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull Quantiles using Johnson's Sudden Death Method. Suitable for right censored data.
