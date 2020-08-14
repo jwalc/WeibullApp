@@ -58,6 +58,11 @@ johnson_method <- function (in_data, time = "time", event = "event", sample = "s
   event_ <- as.symbol(event)
   sample_ <- as.symbol(sample)
   
+  if (!sample %in% names(in_data)) {
+    warning("Sample identification not possible! Did you spell the column name correctly?")
+    return(in_data)
+  }
+  
   df <- in_data %>%
     dplyr::group_by(!!sample_) %>%
     dplyr::mutate(n_sample = dplyr::n()) %>%
