@@ -9,7 +9,7 @@ weibull_y_axis_ <- list(scale = scales::trans_new(name = "weibull_y",
 weibull_x_limits <- function (x_vals) {
   x_min <- base::floor(base::min(base::log10(x_vals)))
   x_max <- base::ceiling(base::max(base::log10(x_vals)))
-  return(tibble(min = x_min, max = x_max))
+  return(c(x_min, x_max))
 }
 
 weibull_q_plot <- function (in_data, time = "time", q = "F_i") {
