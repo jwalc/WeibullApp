@@ -85,6 +85,7 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   
   df <- df %>%
     select(-c("rank"))
+  df["method"] <- "Median Rank"
   
   return(df)
 }
@@ -139,6 +140,8 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
   df <- dplyr::full_join(in_data, df[c(time, event, sample, "rank", "F_i")], by = c(time, event, sample)) %>%
     dplyr::arrange(rank)
   
+  df["method"] <- "Sudden Death"
+  
   return(df)
 }
 
@@ -164,7 +167,9 @@ nelson_method <- function (in_data, time = "time", event = "event") {
     dplyr::mutate(F_i = 1 - base::exp(- H_i))
   
   df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
-
+  
+  df["method"] <- "Nelson"
+  
   return(df)
 }
 
@@ -198,6 +203,8 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
     dplyr::ungroup() %>%
     dplyr::mutate(F_i = base::ifelse(!!event_ == 0, 1-base::cumprod(k_i), NA)) %>%
     dplyr::select(-c(n_fail, n_i, k_i))
+  
+  df["method"] <- "Kaplan-Meier"
   
   return(df)
 }
@@ -243,6 +250,8 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
     dplyr::mutate(F_i = (j - 0.3) / (N + 0.4))
   
   df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
+  
+  df["method"] <- "Johnson"
   
   return(df)
 }
