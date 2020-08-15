@@ -1,8 +1,10 @@
 input_handler <- function (in_data) {
-  if (dplyr::is_tibble(in_data)) {
     return(in_data)
-  } else {
-    # TODO handling of non tibble type
+  } else if (purrr::is_vector(in_data)) {
+    warning("Assuming all events are failures.")
+    df <- tibble::tibble(time = in_data,
+                 event = base::rep(0, base::length(in_data)))
+    return(df)
   }
   return(in_data)
 }
