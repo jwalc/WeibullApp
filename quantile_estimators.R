@@ -1,4 +1,5 @@
 input_handler <- function (in_data) {
+  if (tibble::is_tibble(in_data)) {
     return(in_data)
   } else if (purrr::is_vector(in_data)) {
     warning("Assuming all events are failures.")
