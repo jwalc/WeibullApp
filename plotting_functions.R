@@ -12,7 +12,6 @@ weibull_x_limits <- function (x_vals) {
   return(c(x_min, x_max))
 }
 
-weibull_x_breaks <- function (x_vals) {
 weibull_x_axis <- function (x_vals) {
   
 }
