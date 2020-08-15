@@ -23,7 +23,7 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i") {
                        minor_breaks = weibull_y_axis_$breaks_minor,
                        labels = weibull_y_axis_$labels,
                        limits = c(0.001, 0.999)) +
-    # scale_x_continuous(limits = c(10^4, 10^5 * 1.5)) +
+    scale_x_continuous(limits = 10^weibull_x_limits(in_data[time])) +
     geom_hline(yintercept = 1 - 1/exp(1), color = "blue", linetype = "dotted") +
     labs(title = "Weibull Plot", y = "Quantile in %")
   
