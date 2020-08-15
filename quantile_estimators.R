@@ -79,9 +79,12 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   
   if (!all(df[event] == 0)) {
     warning("mr_regression does not consider right censored data!")
-    df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event)) %>%
+    df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
       dplyr::arrange(!!time_)
   }
+  
+  df <- df %>%
+    select(-c("rank"))
   
   return(df)
 }
