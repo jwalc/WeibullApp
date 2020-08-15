@@ -56,6 +56,11 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
     return(in_data)
   }
   
+  if (!event %in% names(df)) {
+    warning("Assuming all events are failures.")
+    df[event] <- base::rep(0,base::dim(df)[1])
+  }
+  
   df <- df %>%
     dplyr::arrange(!!time_) %>%
     dplyr::filter(!!event_ == 0) %>%
