@@ -15,14 +15,14 @@ input_handler <- function (in_data) {
       df <- tibble::tibble(time = in_data,
                    event = base::rep(0, base::length(in_data)))
     } else {
-      warning("Trying to convert values to numerics.")
+      warning("Trying to convert values to numerics. Assuming all events are failures.")
       df <- tibble::tibble(time = base::as.numeric(in_data),
                            event = base::rep(0, base::length(in_data)))
       if (any(is.na(df))) {
         df <- tibble(time = NULL, event = NULL)
+        warning("Could not convert data successfully.")
       }
     }
-    warning("Assuming all events are failures.")
     return(df)
     
   } else {
