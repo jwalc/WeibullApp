@@ -6,8 +6,10 @@ input_handler <- function (in_data) {
     df <- tibble::tibble(time = in_data,
                  event = base::rep(0, base::length(in_data)))
     return(df)
+  } else {
+    warning("Can not handle input data. Please try a vector or tibble.")
+    return(tibble(time = c(), event = c()))
   }
-  return(in_data)
 }
 
 mr_regression <- function (in_data, time = "time", event = "event", simplified = FALSE) {
