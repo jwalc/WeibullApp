@@ -30,14 +30,14 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
     dplyr::filter(!!event_ == 0) %>%
-    dplyr::mutate(rank = base::seq(1:base::n()))
+    dplyr::mutate(rank = base::seq(1:dplyr::n()))
   
   if (simplified) {
     df <- df %>%
-      dplyr::mutate(F_i = rank / (base::n() + 1))
+      dplyr::mutate(F_i = rank / (dplyr::n() + 1))
   } else if (!simplified) {
     df <- df %>%
-      dplyr::mutate(F_i = (rank - 0.3) / (base::n() + 0.4))
+      dplyr::mutate(F_i = (rank - 0.3) / (dplyr::n() + 0.4))
   } else {
     warning("Invalid input for parameter 'simplified'!")
     return(in_data)
@@ -120,7 +120,7 @@ nelson_method <- function (in_data, time = "time", event = "event") {
   
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
-    dplyr::mutate(rank = base::seq(base::n(), 1)) %>%
+    dplyr::mutate(rank = base::seq(dplyr::n(), 1)) %>%
     dplyr::filter(!!event_ == 0) %>%
     dplyr::mutate(lambda_i = 1 / rank) %>%
     dplyr::mutate(H_i = base::cumsum(lambda_i)) %>%
