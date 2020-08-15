@@ -1,3 +1,4 @@
+
 input_handler <- function (in_data) {
   #' @title Input Data Handler for Quantile Estimators
   #' 
@@ -17,13 +18,16 @@ input_handler <- function (in_data) {
       warning("Trying to convert values to numerics.")
       df <- tibble::tibble(time = base::as.numeric(in_data),
                            event = base::rep(0, base::length(in_data)))
+      if (any(is.na(df))) {
+        df <- tibble(time = NULL, event = NULL)
+      }
     }
     warning("Assuming all events are failures.")
     return(df)
     
   } else {
     warning("Can not handle input data. Please try a vector or tibble.")
-    return(tibble(time = c(), event = c()))
+    return(tibble(time = NULL, event = NULL))
   }
 }
 
@@ -47,7 +51,9 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   time_ <- base::as.symbol(time)
   event_ <- base::as.symbol(event)
   
-  df <- in_data %>%
+  df <- input_handler(in_data)
+  
+  df <- df %>%
     dplyr::arrange(!!time_) %>%
     dplyr::filter(!!event_ == 0) %>%
     dplyr::mutate(rank = base::seq(1:dplyr::n()))
@@ -63,7 +69,7 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
     return(in_data)
   }
   
-  if (!all(in_data[event] == 0)) {
+  if (!all(df[event] == 0)) {
     warning("mr_regression does not consider right censored data!")
     df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
       dplyr::arrange(rank)
