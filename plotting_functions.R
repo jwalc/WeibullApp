@@ -29,6 +29,16 @@ weibull_x_axis <- function (x_vals) {
 }
 
 weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method") {
+  #' @title Weibull Quantile Plot
+  #' 
+  #' Creates a Weibull quantile plot. Scales are transformed such that dots are linear.
+  #' 
+  #' @param in_data tibble, containing time and quantile data and optional estimation method identificator
+  #' @param time character, name of column containing time data
+  #' @param q character, name of column containing quantile estimations
+  #' @param method character, name of column containing method identificator
+  #' @return ggplot object
+
   time_ <- as.symbol(time)
   q_ <- as.symbol(q)
   method_ <- as.symbol(method)
