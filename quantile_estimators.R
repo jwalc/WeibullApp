@@ -5,14 +5,22 @@ input_handler <- function (in_data) {
   #' 
   #' @param in_data input data of variable type
   #' @return tibble with at least two columns for time and event data
-
+  
   if (tibble::is_tibble(in_data)) {
     return(in_data)
-  } else if (purrr::is_vector(in_data)) {
+  
+  } else if (base::is.vector(in_data)) {
+    if (base::is.numeric(in_data)) {
+      df <- tibble::tibble(time = in_data,
+                   event = base::rep(0, base::length(in_data)))
+    } else {
+      warning("Trying to convert values to numerics.")
+      df <- tibble::tibble(time = base::as.numeric(in_data),
+                           event = base::rep(0, base::length(in_data)))
+    }
     warning("Assuming all events are failures.")
-    df <- tibble::tibble(time = in_data,
-                 event = base::rep(0, base::length(in_data)))
     return(df)
+    
   } else {
     warning("Can not handle input data. Please try a vector or tibble.")
     return(tibble(time = c(), event = c()))
