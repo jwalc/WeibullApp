@@ -12,6 +12,10 @@ weibull_x_limits <- function (x_vals) {
   return(c(x_min, x_max))
 }
 
+weibull_x_breaks <- function (x_vals) {
+  
+}
+
 weibull_q_plot <- function (in_data, time = "time", q = "F_i") {
   time_ <- as.symbol(time)
   q_ <- as.symbol(q)
