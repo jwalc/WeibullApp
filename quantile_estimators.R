@@ -52,6 +52,9 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   event_ <- base::as.symbol(event)
   
   df <- input_handler(in_data)
+  if (nrow(df) == 0) {
+    return(in_data)
+  }
   
   df <- df %>%
     dplyr::arrange(!!time_) %>%
