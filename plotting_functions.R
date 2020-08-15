@@ -13,7 +13,17 @@ weibull_x_limits <- function (x_vals) {
 }
 
 weibull_x_axis <- function (x_vals) {
+  x_limits <- weibull_x_limits(x_vals)
   
+  x_breaks <- c(c(1:3, 5) %o% 10^(x_limits[1]:x_limits[2]-1))
+  x_breaks_minor <- c(c(1:10) %o% 10^(x_limits[1]:x_limits[2]-1))
+  
+  return(list(
+    limits = x_limits,
+    breaks_major = x_breaks,
+    breaks_minor = x_breaks_minor,
+    labels = x_breaks
+  ))
 }
 
 weibull_q_plot <- function (in_data, time = "time", q = "F_i") {
