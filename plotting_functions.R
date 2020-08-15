@@ -13,6 +13,7 @@ weibull_x_limits <- function (x_vals) {
 }
 
 weibull_x_breaks <- function (x_vals) {
+weibull_x_axis <- function (x_vals) {
   
 }
 
