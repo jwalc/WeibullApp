@@ -29,7 +29,9 @@ weibull_x_axis <- function (x_vals) {
 weibull_q_plot <- function (in_data, time = "time", q = "F_i") {
   time_ <- as.symbol(time)
   q_ <- as.symbol(q)
-
+  
+  weibull_x_axis_ <- weibull_x_axis(in_data[time])
+  
   w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_)) +
     geom_point() +
     coord_trans(x = "log10", y = weibull_y_axis_$scale) +
@@ -37,7 +39,10 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i") {
                        minor_breaks = weibull_y_axis_$breaks_minor,
                        labels = weibull_y_axis_$labels,
                        limits = c(0.001, 0.999)) +
-    scale_x_continuous(limits = 10^weibull_x_limits(in_data[time])) +
+    scale_x_continuous(limits = 10^weibull_x_axis_$limits,
+                       breaks = weibull_x_axis_$breaks_major,
+                       minor_breaks = weibull_x_axis_$breaks_minor,
+                       labels = weibull_x_axis_$labels) +
     geom_hline(yintercept = 1 - 1/exp(1), color = "blue", linetype = "dotted") +
     labs(title = "Weibull Plot", y = "Quantile in %")
   
