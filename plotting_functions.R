@@ -28,13 +28,20 @@ weibull_x_axis <- function (x_vals) {
   ))
 }
 
-weibull_q_plot <- function (in_data, time = "time", q = "F_i") {
+weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method") {
   time_ <- as.symbol(time)
   q_ <- as.symbol(q)
+  method_ <- as.symbol(method)
   
   weibull_x_axis_ <- weibull_x_axis(in_data[time])
   
-  w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_)) +
+  if (!method %in% names(in_data)) {
+    w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_))
+  } else {
+    w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_, color = !!method_))
+  }
+  
+  w_plot <- w_plot +
     geom_point() +
     coord_trans(x = "log10", y = weibull_y_axis_$scale) +
     scale_y_continuous(breaks = weibull_y_axis_$breaks_major,
