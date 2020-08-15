@@ -1,4 +1,11 @@
 input_handler <- function (in_data) {
+  #' @title Input Data Handler for Quantile Estimators
+  #' 
+  #' Checks type of input data and tries to convert it to a supported format.
+  #' 
+  #' @param in_data input data of variable type
+  #' @return tibble with at least two columns for time and event data
+
   if (tibble::is_tibble(in_data)) {
     return(in_data)
   } else if (purrr::is_vector(in_data)) {
