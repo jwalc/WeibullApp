@@ -157,7 +157,7 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
   return(df)
 }
 
-nelson_method <- function (in_data, time = "time", event = "event") {
+nelson_method <- function (in_data, time = "time", event = "event", append = FALSE) {
   #' @title Nelson Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull quantiles using the Nelson Method. Suitable for right censored data.
@@ -178,7 +178,13 @@ nelson_method <- function (in_data, time = "time", event = "event") {
     dplyr::mutate(H_i = base::cumsum(lambda_i)) %>%
     dplyr::mutate(F_i = 1 - base::exp(- H_i))
   
-  df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
+  if (append) {
+    df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
+  } else {
+    df <- df %>%
+      select(c(time, "F_i")) %>%
+      filter(!is.na(F_i))
+  }
   
   df["method"] <- "Nelson"
   
