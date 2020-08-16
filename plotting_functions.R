@@ -50,9 +50,10 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
   if (!method %in% names(in_data)) {
     w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_))
   } else {
-    color_values <- c("Median Rank" = "red", "Sudden Death" = "blue",
-                      "Kaplan-Meier" = "green", "Nelson" = "yellow",
-                      "Johnson" = "orange")
+    # set colors for methods for being able to plot regression lines in the same colors
+    color_values <- c("Median Rank" = "#999933", "Sudden Death" = "#33CC00",
+                      "Kaplan-Meier" = "#FF9900", "Nelson" = "#CC0033",
+                      "Johnson" = "#6666FF")
     w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_, color = !!method_)) +
       scale_color_manual(values = color_values)
   }
@@ -97,8 +98,9 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
       
       for (df in df_list) {
         m_name <- select(df, !!method_) %>% distinct() %>% pull()
-        print(m_name)
         res <- linear_regression(dplyr::pull(df, y_transform), dplyr::pull(df, x_transform))
+        
+        # workaround for plotting a straight line with nonlinearly transformed axis
         pred <- predict_path(x_min = x_min,
                              x_max = x_max,
                              b = res$slope,
