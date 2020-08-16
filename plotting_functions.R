@@ -46,7 +46,7 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
   # compute breaks, limits and labels for x-axis
   weibull_x_axis_ <- weibull_x_axis(in_data[time])
   
-  # check if method column exists
+  # if method column exists, color dots by method
   if (!method %in% names(in_data)) {
     w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_))
   } else {
@@ -70,16 +70,39 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
   
   # add regression line
   if (regr_line) {
-    df <- in_data %>%
-      dplyr::filter(!is.na(!!q_)) %>%
-      dplyr::mutate(y_transform = log(log(1 / (1 - !!q_))), x_transform = log(!!time_))
-    res <- linear_regression(dplyr::pull(df, y_transform), dplyr::pull(df, x_transform))
-    pred <- predict_path(x_min = min(df[time]),
-                         x_max = max(df[time]),
-                         b = res$slope,
-                         T = exp(- res$intercept / res$slope))
-    w_plot <- w_plot +
-      geom_line(data = pred, aes(x = x, y = y), color = "red")
+    if (!method %in% names(in_data)) {
+      # if it works, why change it?
+      df <- in_data %>%
+        dplyr::filter(!is.na(!!q_)) %>%
+        dplyr::mutate(y_transform = log(log(1 / (1 - !!q_))), x_transform = log(!!time_))
+      res <- linear_regression(dplyr::pull(df, y_transform), dplyr::pull(df, x_transform))
+      pred <- predict_path(x_min = min(df[time]),
+                           x_max = max(df[time]),
+                           b = res$slope,
+                           T = exp(- res$intercept / res$slope))
+      w_plot <- w_plot +
+        geom_line(data = pred, aes(x = x, y = y), color = "red")
+    } else {
+      df_list <- in_data %>%
+        dplyr::filter(!is.na(!!q_)) %>%
+        dplyr::mutate(y_transform = log(log(1 / (1 - !!q_))), x_transform = log(!!time_)) %>%
+        dplyr::group_by(!!method_) %>%
+        dplyr::group_split()
+      x_min <- min(in_data[time])
+      x_max <- max(in_data[time])
+      
+      for (df in df_list) {
+        print(df$method[1])
+        res <- linear_regression(dplyr::pull(df, y_transform), dplyr::pull(df, x_transform))
+        print(res)
+        pred <- predict_path(x_min = x_min,
+                             x_max = x_max,
+                             b = res$slope,
+                             T = exp(- res$intercept / res$slope))
+        w_plot <- w_plot +
+          geom_line(data = pred, aes(x = x, y = y))
+      }
+    }
   }
   
   return(w_plot)
