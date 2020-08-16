@@ -31,7 +31,7 @@ input_handler <- function (in_data) {
   }
 }
 
-mr_regression <- function (in_data, time = "time", event = "event", simplified = FALSE) {
+mr_regression <- function (in_data, time = "time", event = "event", simplified = FALSE, append = FALSE) {
   #' @title Median Rank Regression for Weibull Quantiles
   #' 
   #' Calculates quantile estimates for the Weibull distribution using median rank regression.
@@ -77,15 +77,20 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
     return(in_data)
   }
   
-  if (!all(df[event] == 0)) {
-    warning("mr_regression does not consider right censored data!")
-    df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
-      dplyr::arrange(!!time_)
+  if (append) {
+    if (!all(df[event] == 0)) {
+      warning("mr_regression does not consider right censored data!")
+      df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
+        dplyr::arrange(!!time_)
+      df <- df %>%
+        dplyr::select(-c("rank"))
+      df["method"] <- "Median Rank"
+    }
+  } else {
+    df <- df %>%
+      dplyr::select(c(time, F_i)) %>%
+      dplyr::mutate(method = "Median Rank")
   }
-  
-  df <- df %>%
-    select(-c("rank"))
-  df["method"] <- "Median Rank"
   
   return(df)
 }
