@@ -191,7 +191,7 @@ nelson_method <- function (in_data, time = "time", event = "event", append = FAL
   return(df)
 }
 
-kaplan_meier_method <- function (in_data, time = "time", event = "event", n_events = "n_events") {
+kaplan_meier_method <- function (in_data, time = "time", event = "event", n_events = "n_events", append = FALSE) {
   #' @title Kaplan-Meier Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull quantiles using the Kaplan-Meier Method. Suitable for right censored data.
@@ -221,6 +221,12 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
     dplyr::ungroup() %>%
     dplyr::mutate(F_i = base::ifelse(!!event_ == 0, 1-base::cumprod(k_i), NA)) %>%
     dplyr::select(-c(n_fail, n_i, k_i))
+  
+  if (!append) {
+    df <- df %>%
+      select(c(time, "F_i")) %>%
+      filter(!is.na(F_i))
+  }
   
   df["method"] <- "Kaplan-Meier"
   
