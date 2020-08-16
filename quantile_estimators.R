@@ -31,7 +31,7 @@ input_handler <- function (in_data) {
   }
 }
 
-mr_regression <- function (in_data, time = "time", event = "event", simplified = FALSE) {
+mr_regression <- function (in_data, time = "time", event = "event", simplified = FALSE, append = FALSE) {
   #' @title Median Rank Regression for Weibull Quantiles
   #' 
   #' Calculates quantile estimates for the Weibull distribution using median rank regression.
@@ -45,7 +45,8 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   #' @param in_data numeric vector or tibble containing time to failure
   #' @param time character, name of column containing time data
   #' @param event character, name of column containing event type
-  #' @param simplified boolean, specifying use of simplified estimator 
+  #' @param simplified boolean, specifying use of simplified estimator
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble, returns a tibble with added columns rank and estimated quantiles
   
   time_ <- base::as.symbol(time)
@@ -77,20 +78,26 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
     return(in_data)
   }
   
-  if (!all(df[event] == 0)) {
-    warning("mr_regression does not consider right censored data!")
-    df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
-      dplyr::arrange(!!time_)
+  if (append) {
+    if (!all(df[event] == 0)) {
+      warning("mr_regression does not consider right censored data!")
+      df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
+        dplyr::arrange(!!time_)
+      df <- df %>%
+        dplyr::select(-c("rank"))
+      df["method"] <- "Median Rank"
+    }
+  } else {
+    df <- df %>%
+      dplyr::select(c(time, "F_i")) %>%
+      dplyr::filter(!is.na(F_i)) %>%
+      dplyr::mutate(method = "Median Rank")
   }
-  
-  df <- df %>%
-    select(-c("rank"))
-  df["method"] <- "Median Rank"
   
   return(df)
 }
 
-johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample") {
+johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample", append = FALSE) {
   #' @title Johnson Sudden Death Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull Quantiles using Johnson's Sudden Death Method. Suitable for right censored data.
@@ -106,6 +113,7 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
   #' @param time character, name of column containing time data
   #' @param event character, name of column containing event type
   #' @param sample character, name of column containing sample identificator
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble with added columns rank and estimated quantiles
   
   time_ <- as.symbol(time)
@@ -137,15 +145,21 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
   df <- df %>%
     dplyr::mutate(F_i = (rank - 0.3) / (N + 0.4))
   
-  df <- dplyr::full_join(in_data, df[c(time, event, sample, "rank", "F_i")], by = c(time, event, sample)) %>%
-    dplyr::arrange(rank)
-  
-  df["method"] <- "Sudden Death"
+  if (append) {
+    df <- dplyr::full_join(in_data, df[c(time, event, sample, "rank", "F_i")], by = c(time, event, sample)) %>%
+      dplyr::arrange(rank)
+    df["method"] <- "Sudden Death"
+  } else {
+    df <- df %>%
+      dplyr::select(c(time, "F_i")) %>%
+      dplyr::filter(!is.na(F_i)) %>%
+      dplyr::mutate(method = "Sudden Death")
+  }
   
   return(df)
 }
 
-nelson_method <- function (in_data, time = "time", event = "event") {
+nelson_method <- function (in_data, time = "time", event = "event", append = FALSE) {
   #' @title Nelson Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull quantiles using the Nelson Method. Suitable for right censored data.
@@ -153,6 +167,7 @@ nelson_method <- function (in_data, time = "time", event = "event") {
   #' @param in_data tibble, containing time to failure and event data
   #' @param time character, name of column containing time data
   #' @param event character, name of column containing event type
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble with added quantile estimations
   
   time_ <- as.symbol(time)
@@ -166,14 +181,20 @@ nelson_method <- function (in_data, time = "time", event = "event") {
     dplyr::mutate(H_i = base::cumsum(lambda_i)) %>%
     dplyr::mutate(F_i = 1 - base::exp(- H_i))
   
-  df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
+  if (append) {
+    df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
+  } else {
+    df <- df %>%
+      select(c(time, "F_i")) %>%
+      filter(!is.na(F_i))
+  }
   
   df["method"] <- "Nelson"
   
   return(df)
 }
 
-kaplan_meier_method <- function (in_data, time = "time", event = "event", n_events = "n_events") {
+kaplan_meier_method <- function (in_data, time = "time", event = "event", n_events = "n_events", append = FALSE) {
   #' @title Kaplan-Meier Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull quantiles using the Kaplan-Meier Method. Suitable for right censored data.
@@ -182,6 +203,7 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
   #' @param time character, name of the column containing time data
   #' @param event character, name of the column containing event type
   #' @param n_events character, name of the column containing number of events of type at timestamp
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble with added quantile estimations
 
   time_ <- as.symbol(time)
@@ -204,12 +226,18 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
     dplyr::mutate(F_i = base::ifelse(!!event_ == 0, 1-base::cumprod(k_i), NA)) %>%
     dplyr::select(-c(n_fail, n_i, k_i))
   
+  if (!append) {
+    df <- df %>%
+      select(c(time, "F_i")) %>%
+      filter(!is.na(F_i))
+  }
+  
   df["method"] <- "Kaplan-Meier"
   
   return(df)
 }
 
-johnson_method <- function (in_data, time = "time", event = "event", n_events = "n_events") {
+johnson_method <- function (in_data, time = "time", event = "event", n_events = "n_events", append = FALSE) {
   #' @title Johnson Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull quantiles using Johnson Method. Suitable for right censored data.
@@ -218,6 +246,7 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
   #' @param time character, name of the column containing time data
   #' @param event character, name of the column containing event type
   #' @param n_events character, name of the column containing number of events of type at timestamp
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble with added quantile estimations
   
   time_ <- as.symbol(time)
@@ -249,9 +278,69 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
   df <- df %>%
     dplyr::mutate(F_i = (j - 0.3) / (N + 0.4))
   
-  df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
-  
+  if (append) {
+    df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
+  } else {
+    df <- df %>%
+      select(c(time, "F_i")) %>%
+      filter(!is.na(F_i))
+  }
+
   df["method"] <- "Johnson"
   
   return(df)
+}
+
+weibull_estimation <- function(in_data, time = "time", event = "event", n_events = "n_events",
+                               sample = "sample", estimation_method = "mr_regression") {
+  #' @title Weibull Quantile Estimation Wrapper Method
+  #' 
+  #' Computes Weibull Quantiles using given estimation method. Supports Median Rank Regression,
+  #' Johnson's Sudden Death Method, Kaplan-Meier Method, Nelson Method and Johnson Method.
+  #' 
+  #' @param in_data tibble, containing data for estimation methods
+  #' @param time character, name of column containing time data
+  #' @param event character, name of column containing event type
+  #' @param n_events character, name of column containing number of events at that timestamp
+  #' @param sample character, name of column containing sample identification
+  #' @param estimation_method character, one or more of the following supported methods:
+  #' "mr_regression", "sudden_death", "kaplan_meier", "nelson", "johnson"
+  #' @return tibble with three columns: time, F_i and method
+  
+  if ("mr_regression" %in% estimation_method) {
+    df_mr <- mr_regression(in_data = in_data, time = time, event = event,
+                           simplified = FALSE, append = FALSE)
+  } else {
+    df_mr <- tibble(time = NULL, F_i = NULL, method = NULL)
+  }
+  
+  if ("sudden_death" %in% estimation_method) {
+    df_sd <- johnson_sd_method(in_data = in_data, time = time, event = event,
+                               sample = sample, append = FALSE)
+  } else {
+    df_sd <- tibble(time = NULL, F_i = NULL, method = NULL)
+  }
+  
+  if ("kaplan_meier" %in% estimation_method) {
+    df_km <- kaplan_meier_method(in_data = in_data, time = time, event = event,
+                                 n_events = n_events, append = FALSE)
+  } else {
+    df_km <- tibble(time = NULL, F_i = NULL, method = NULL)
+  }
+  
+  if("nelson" %in% estimation_method) {
+    df_ne <- nelson_method(in_data = in_data, time = time, event = event,
+                           append = FALSE)
+  } else {
+    df_ne <- tibble(time = NULL, F_i = NULL, method = NULL)
+  }
+  
+  if ("johnson" %in% estimation_method) {
+    df_jo <- johnson_method(in_data = in_data, time = time, event = event,
+                            n_events = n_events, append = FALSE)
+  } else {
+    df_jo <- tibble(time = NULL, F_i = NULL, method = NULL)
+  }
+  
+  return(rbind(df_mr, df_sd, df_km, df_ne, df_jo))
 }
