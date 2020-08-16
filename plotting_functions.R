@@ -50,7 +50,11 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
   if (!method %in% names(in_data)) {
     w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_))
   } else {
-    w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_, color = !!method_))
+    color_values <- c("Median Rank" = "red", "Sudden Death" = "blue",
+                      "Kaplan-Meier" = "green", "Nelson" = "yellow",
+                      "Johnson" = "orange")
+    w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_, color = !!method_)) +
+      scale_color_manual(values = color_values)
   }
   
   # create scatterplot
@@ -92,18 +96,18 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
       x_max <- max(in_data[time])
       
       for (df in df_list) {
-        print(df$method[1])
+        m_name <- select(df, !!method_) %>% distinct() %>% pull()
+        print(m_name)
         res <- linear_regression(dplyr::pull(df, y_transform), dplyr::pull(df, x_transform))
-        print(res)
         pred <- predict_path(x_min = x_min,
                              x_max = x_max,
                              b = res$slope,
                              T = exp(- res$intercept / res$slope))
         w_plot <- w_plot +
-          geom_line(data = pred, aes(x = x, y = y))
+          geom_line(data = pred, aes(x = x, y = y), color = color_values[m_name])
       }
     }
   }
-  
+
   return(w_plot)
 }
