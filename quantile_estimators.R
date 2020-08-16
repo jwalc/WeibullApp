@@ -95,7 +95,7 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   return(df)
 }
 
-johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample") {
+johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample", append = FALSE) {
   #' @title Johnson Sudden Death Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull Quantiles using Johnson's Sudden Death Method. Suitable for right censored data.
@@ -142,10 +142,16 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
   df <- df %>%
     dplyr::mutate(F_i = (rank - 0.3) / (N + 0.4))
   
-  df <- dplyr::full_join(in_data, df[c(time, event, sample, "rank", "F_i")], by = c(time, event, sample)) %>%
-    dplyr::arrange(rank)
-  
-  df["method"] <- "Sudden Death"
+  if (append) {
+    df <- dplyr::full_join(in_data, df[c(time, event, sample, "rank", "F_i")], by = c(time, event, sample)) %>%
+      dplyr::arrange(rank)
+    df["method"] <- "Sudden Death"
+  } else {
+    df <- df %>%
+      dplyr::select(c(time, "F_i")) %>%
+      dplyr::filter(!is.na(F_i)) %>%
+      dplyr::mutate(method = "Sudden Death")
+  }
   
   return(df)
 }
