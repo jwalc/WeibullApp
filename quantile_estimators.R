@@ -88,7 +88,8 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
     }
   } else {
     df <- df %>%
-      dplyr::select(c(time, F_i)) %>%
+      dplyr::select(c(time, "F_i")) %>%
+      dplyr::filter(!is.na(F_i)) %>%
       dplyr::mutate(method = "Median Rank")
   }
   
