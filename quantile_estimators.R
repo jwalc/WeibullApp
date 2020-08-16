@@ -233,7 +233,7 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
   return(df)
 }
 
-johnson_method <- function (in_data, time = "time", event = "event", n_events = "n_events") {
+johnson_method <- function (in_data, time = "time", event = "event", n_events = "n_events", append = FALSE) {
   #' @title Johnson Method for Weibull Quantile Estimation
   #' 
   #' Computes Weibull quantiles using Johnson Method. Suitable for right censored data.
@@ -273,8 +273,14 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
   df <- df %>%
     dplyr::mutate(F_i = (j - 0.3) / (N + 0.4))
   
-  df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
-  
+  if (append) {
+    df <- dplyr::full_join(in_data, df[c(time, event, "F_i")], by = c(time, event))
+  } else {
+    df <- df %>%
+      select(c(time, "F_i")) %>%
+      filter(!is.na(F_i))
+  }
+
   df["method"] <- "Johnson"
   
   return(df)
