@@ -45,7 +45,8 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   #' @param in_data numeric vector or tibble containing time to failure
   #' @param time character, name of column containing time data
   #' @param event character, name of column containing event type
-  #' @param simplified boolean, specifying use of simplified estimator 
+  #' @param simplified boolean, specifying use of simplified estimator
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble, returns a tibble with added columns rank and estimated quantiles
   
   time_ <- base::as.symbol(time)
@@ -112,6 +113,7 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
   #' @param time character, name of column containing time data
   #' @param event character, name of column containing event type
   #' @param sample character, name of column containing sample identificator
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble with added columns rank and estimated quantiles
   
   time_ <- as.symbol(time)
@@ -165,6 +167,7 @@ nelson_method <- function (in_data, time = "time", event = "event", append = FAL
   #' @param in_data tibble, containing time to failure and event data
   #' @param time character, name of column containing time data
   #' @param event character, name of column containing event type
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble with added quantile estimations
   
   time_ <- as.symbol(time)
@@ -200,6 +203,7 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
   #' @param time character, name of the column containing time data
   #' @param event character, name of the column containing event type
   #' @param n_events character, name of the column containing number of events of type at timestamp
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble with added quantile estimations
 
   time_ <- as.symbol(time)
@@ -242,6 +246,7 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
   #' @param time character, name of the column containing time data
   #' @param event character, name of the column containing event type
   #' @param n_events character, name of the column containing number of events of type at timestamp
+  #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
   #' @return tibble with added quantile estimations
   
   time_ <- as.symbol(time)
