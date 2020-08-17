@@ -1,0 +1,29 @@
+\documentclass[10pt,a4paper]{article}
+
+% formatting and layout
+\usepackage[left=2.5cm, right=2.5cm, bottom=2.5cm]{geometry}
+\usepackage[onehalfspacing]{setspace}
+\setlength{\parindent}{0pt}
+
+% input/output language
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% math packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+% author and title
+\author{Jan Walczak}
+\title{ShinyApp for simple Weibull Analysis}
+
+\begin{document}
+	\maketitle
+	
+	\input{parts/introduction}
+	\input{parts/methods}
+	\input{parts/implementation}
+	\input{parts/ShinyApp}
+\end{document}
