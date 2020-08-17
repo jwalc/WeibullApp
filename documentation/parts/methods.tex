@@ -9,6 +9,13 @@ $$ F_i = \frac{i - 0.3}{n + 0.4}.$$
 \subsection{Sudden Death Method}
 
 \subsection{Kaplan-Meier Method}
+The Kaplan-Meier Method can be used in right-censored data. Again, the data is sorted by time to failure. KM can be used when there are multiple events (survivals and fails) at one time.
+The estimator is given by
+$$ F_i = 1 - \prod_{t_i \leq t} \left( \frac{n_i - d_i}{n_i} \right), $$
+where $n_i$ is the number of units in the experiment up until $t$ and $d_i$ is the number of failed units at the time $t$.
+If the last event consists of failures only, we should use the adjusted estimator
+$$ F_i = 1 - \prod_{t_i \leq t} \left( \frac{n_i - d_i + 1}{n_i + 1} \right) $$
+to avoid a quantile $F_i = 1$. This would lead to an error when transforming the estimation for the linear regression.
 
 \subsection{Nelson Method}
 The Nelson Method can be used on right-censored data. We first assign an inverse Ranking $r_i$ for all of the samples in our data. Then, we compute the failure rate by $\lambda_{\text{Nel}, i}(t) = \frac{1}{r_i}$ for all failed units. The cumulative failure rate is given by $H_{\text{Nel}, i}(t) = \sum_{j=1}^{i} \lambda_{\text{Nel}, i}$. Finally we use the estimator
