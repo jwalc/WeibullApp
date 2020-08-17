@@ -28,6 +28,25 @@ weibull_x_axis <- function (x_vals) {
   ))
 }
 
+predict_path <- function (x_min, x_max, b, T, graining = 1000) {
+  #' @title Predict Quantiles for Weibull Plot
+  #'
+  #' Computes value pairs for the regression line.
+  #' 
+  #' @param x_min minimal x value
+  #' @param x_max maximal x value
+  #' @param b Weibull paramter
+  #' @param T Weibull parameter
+  #' @param graining sets the number of values to predict. Higher graining should lead to a smoother line.
+  #' @return tibble containing the x, y value pairs for the Weibull Plot
+  pred_data <- tibble(x = seq(x_min, x_max, length.out = graining)) %>%
+    mutate(y_hat = b * log(x) - b * log(T)) %>%
+    mutate(y = 1 - 1 / exp(exp(y_hat))) %>%
+    select(x, y)
+  return(pred_data)
+}
+
+
 weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method", regr_line = TRUE) {
   #' @title Weibull Quantile Plot
   #' 
