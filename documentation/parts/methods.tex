@@ -29,5 +29,11 @@ $$ F_i(t) = 1 - e^{-H_{\text{Nel}, i}(t)}. $$
 Due to an strictly monotonously increasing $\lambda_{\text{Nel}}$, this method is only suitable for Weibull distributions with $b>0$. (For a derivation of $\lambda_{\text{Nel}}$ please check other sources.)
 
 \subsection{Johnson Method}
+The Johnson Method also incorporates information about survivors. The ranking is given by the following:
+$$ j_i = j_{i-1} + \Delta j_{i,i-1}, $$
+$j_0 = 0$ and
+$$ \Delta j_{i,i-1} = \left( \frac{N + 1 - j_{i-1}}{N + 1 - K} \right) \cdot n_F, $$
+where $n_F$ is the number of failed units at time $t$ and $K$ is the sum of all units that are removed (failures and survivors) from the experiment before time $t$. The quantile estimator is then given by
+$$ F_i = \frac{j_i - 0.3}{n + 0.4}. $$
 
 \subsection{Linear Regression for Estimation of Weibull Parameters}
