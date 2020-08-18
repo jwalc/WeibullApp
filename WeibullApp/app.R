@@ -15,18 +15,27 @@ example_data_list <- list.files(path = "./data/")
 
 # Define UI for application that draws a histogram
 ui <- navbarPage(title = "WeibullApp",
-    
+    # --- --- Data Picker --- ---
     navbarMenu(title = "Data Picker",
+        # --- Datasets ---
         tabPanel("Datasets",
                  selectInput(inputId = "example_data",
                              label = "Please choose an example dataset",
                              choices = example_data_list),
                  dataTableOutput("picked_data")
                  ),
-        tabPanel("Upload Data", "TODO")
+        
+        # --- Upload Data ---
+        tabPanel("Upload Data", "Coming Soon")
     ),
-    tabPanel("Weibull Paper", "TODO"),
-    tabPanel("Parameter Estimation", "TODO"),
+    
+    # --- --- Weibull Paper --- ---
+    tabPanel("Weibull Paper", "Coming Soon"),
+    
+    # --- --- Parameter Estimation --- ---
+    tabPanel("Parameter Estimation", "Coming Soon"),
+    
+    # --- --- Weibull Explorer --- ---
     tabPanel("Weibull Explorer", 
              sidebarLayout(
                  sidebarPanel(width = 3,
