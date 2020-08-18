@@ -60,12 +60,12 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   
   if (!event %in% names(df)) {
     warning("Assuming all events are failures.")
-    df[event] <- base::rep(0,base::dim(df)[1])
+    df[event] <- base::rep(1,base::dim(df)[1])
   }
   
   df <- df %>%
     dplyr::arrange(!!time_) %>%
-    dplyr::filter(!!event_ == 0) %>%
+    dplyr::filter(!!event_ == 1) %>%
     dplyr::mutate(rank = base::seq(1:dplyr::n()))
   
   if (simplified) {
@@ -80,7 +80,7 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   }
   
   if (append) {
-    if (!all(df[event] == 0)) {
+    if (!all(df[event] == 1)) {
       warning("mr_regression does not consider right censored data!")
       df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
         dplyr::arrange(!!time_)
