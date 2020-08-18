@@ -285,7 +285,7 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
     dplyr::group_by(!!time_) %>%
     dplyr::mutate(n_out = base::min(n_out)) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(!!event_ == 0)
+    dplyr::filter(!!event_ == 1)
   
   k <- base::dim(df)[1]
   df["j"] <- c(as.numeric((N + 1) / (N + 1 - df["n_out"][1,])), base::rep(0, k-1))
