@@ -10,13 +10,19 @@
 library(shiny)
 library(tidyverse)
 
-expl_time <- seq(0, 200, by = 1)
+expl_time <- seq(0, 200, by = .25)
+example_data_list <- list.files(path = "./data/")
 
 # Define UI for application that draws a histogram
 ui <- navbarPage(title = "WeibullApp",
     
     navbarMenu(title = "Data Picker",
-        tabPanel("Datasets", "TODO"),
+        tabPanel("Datasets",
+                 selectInput(inputId = "example_data",
+                             label = "Please choose an example dataset",
+                             choices = example_data_list),
+                 dataTableOutput("picked_data")
+                 ),
         tabPanel("Upload Data", "TODO")
     ),
     tabPanel("Weibull Paper", "TODO"),
@@ -47,6 +53,21 @@ ui <- navbarPage(title = "WeibullApp",
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+    
+    # --- Data Picker --- --- --- --- ---
+    picked_data <- reactive({
+        read_csv(paste0("data/", input$example_data))
+    })
+    
+    output$picked_data <- renderDataTable({
+        picked_data()
+        })
+    
+    # --- Weibull Paper --- --- --- --- ---
+    
+    # --- Parameter Estimation --- --- --- --- ---
+    
+    # --- Weibull Explorer --- --- --- --- ---
     expl_data <- reactive({
         tibble(x = expl_time,
                f = dweibull(expl_time, shape = input$expl_b, scale = input$expl_T),
