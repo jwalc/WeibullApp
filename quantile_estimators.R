@@ -130,7 +130,7 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
     dplyr::group_by(!!sample_) %>%
     dplyr::mutate(n_sample = dplyr::n()) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(!!event_ == 0) %>%
+    dplyr::filter(!!event_ == 1) %>%
     dplyr::arrange(!!time_)
   
   df["rank"] <- c(1, base::rep(0, base::dim(df)[1] - 1))
