@@ -12,12 +12,13 @@ input_handler <- function (in_data) {
   
   } else if (base::is.vector(in_data)) {
     if (base::is.numeric(in_data)) {
+      # Assume all events are Failures
       df <- tibble::tibble(time = in_data,
-                   event = base::rep(0, base::length(in_data)))
+                   event = base::rep(1, base::length(in_data)))
     } else {
       warning("Trying to convert values to numerics. Assuming all events are failures.")
       df <- tibble::tibble(time = base::as.numeric(in_data),
-                           event = base::rep(0, base::length(in_data)))
+                           event = base::rep(1, base::length(in_data)))
       if (any(is.na(df))) {
         df <- tibble(time = NULL, event = NULL)
         warning("Could not convert data successfully.")
