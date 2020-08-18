@@ -177,7 +177,7 @@ nelson_method <- function (in_data, time = "time", event = "event", append = FAL
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
     dplyr::mutate(rank = base::seq(dplyr::n(), 1)) %>%
-    dplyr::filter(!!event_ == 0) %>%
+    dplyr::filter(!!event_ == 1) %>%
     dplyr::mutate(lambda_i = 1 / rank) %>%
     dplyr::mutate(H_i = base::cumsum(lambda_i)) %>%
     dplyr::mutate(F_i = 1 - base::exp(- H_i))
