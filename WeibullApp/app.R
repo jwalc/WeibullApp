@@ -19,12 +19,29 @@ ui <- navbarPage(title = "WeibullApp",
     navbarMenu(title = "Data Picker",
         # --- Datasets ---
         tabPanel("Datasets",
-                 selectInput(inputId = "example_data",
-                             label = "Please choose an example dataset",
-                             choices = example_data_list),
-                 dataTableOutput("picked_data")
-                 ),
-        
+            sidebarLayout(
+                # Sidebar
+                sidebarPanel(width = 3,
+                    # Data selection
+                    selectInput(inputId = "example_data",
+                                label = "Please choose an example dataset",
+                                choices = example_data_list),
+                    # Method selection
+                    selectizeInput(inputId = "methods",
+                                label = "Please choose estimation methods",
+                                choices = c("Median Rank", "Sudden Death", "Nelson", "Kaplan-Meier", "Johnson"),
+                                multiple = TRUE),
+                    # Column selection
+                    wellPanel(
+                        uiOutput("pick_columns")
+                        )
+                ),
+                # Main Panel
+                mainPanel(
+                    dataTableOutput("picked_data")
+                )
+            )
+        ),
         # --- Upload Data ---
         tabPanel("Upload Data", "Coming Soon")
     ),
@@ -66,6 +83,16 @@ server <- function(input, output) {
     # --- Data Picker --- --- --- --- ---
     picked_data <- reactive({
         read_csv(paste0("data/", input$example_data))
+    })
+    
+    output$pick_columns <- renderUI({
+        columns <- colnames(picked_data())
+        tagList(
+        selectInput("example_time", "Please choose the column containing time data", columns),
+        selectInput("example_event", "Please choose the column containing type of event", columns),
+        selectInput("example_n_events", "Please choose the column containing data on number of events", columns),
+        selectInput("example_sample", "Please choose the column containing sample identificator", columns)
+        )
     })
     
     output$picked_data <- renderDataTable({
