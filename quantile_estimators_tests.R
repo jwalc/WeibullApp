@@ -1,7 +1,7 @@
 test_input_handler <- function () {
   # Basic test for valid input_data
   input_data <- tibble(Laufzeit = c(28000, 12000, 67000, 91000, 54000, 40000, 110000, 74000, 88000, 37000),
-                    Ausfall = c(rep(0, 8), 1, 1))
+                    Ausfall = c(rep(1, 8), 0, 0))
   input_handler(input_data)
   
   # Test for a valid input vector
@@ -18,13 +18,13 @@ test_input_handler <- function () {
 test_mr_regression <- function () {
   # Basic functionality test
   mr_data <- tibble(time = c(28000, 12000, 67000, 91000, 54000, 40000, 110000, 74000, 88000, 37000),
-                    event = c(rep(0, 10)))
+                    event = c(rep(1, 10)))
   mr_regression(mr_data, "time", "event")
   mr_regression(mr_data, "time", "event", simplified = TRUE)
   
   # Testing existence of survival events and custom column names
   mr_data <- tibble(Laufzeit = c(28000, 12000, 67000, 91000, 54000, 40000, 110000, 74000, 88000, 37000),
-                    Ausfall = c(rep(0, 8), 1, 1))
+                    Ausfall = c(rep(1, 8), 0, 0))
   mr_regression(mr_data, "Laufzeit", "Ausfall")
   mr_regression(mr_data, "Laufzeit", "Ausfall", simplified = TRUE)
   
