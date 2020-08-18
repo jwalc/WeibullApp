@@ -219,11 +219,11 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
   
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
-    dplyr::mutate(n_fail = base::ifelse(!!event_ == 0, !!n_events_, 0)) %>%
+    dplyr::mutate(n_fail = base::ifelse(!!event_ == 1, !!n_events_, 0)) %>%
     dplyr::mutate(n_i = base::sum(!!n_events_) - base::cumsum(!!n_events_) + !!n_events_) %>%
     dplyr::group_by(!!time_) %>%
     dplyr::mutate(n_i = base::max(n_i)) %>%
-    dplyr::mutate(km2 = all(!!event_ == 0))
+    dplyr::mutate(km2 = all(!!event_ == 1))
     
   
   if (pull(tail(df["km2"], 1))) {
@@ -233,13 +233,13 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
     df <- df %>%
       dplyr::ungroup() %>%
       dplyr::mutate(k_i = (n_i - n_fail + 1) / (n_i + 1)) %>%
-      dplyr::mutate(F_i = base::ifelse(!!event_ == 0, 1-base::cumprod(k_i), NA))
+      dplyr::mutate(F_i = base::ifelse(!!event_ == 1, 1-base::cumprod(k_i), NA))
   } else {
     # regular Kaplan-Meier
     df <- df %>%
       dplyr::ungroup() %>%
       dplyr::mutate(k_i = (n_i - n_fail) / n_i) %>%
-      dplyr::mutate(F_i = base::ifelse(!!event_ == 0, 1-base::cumprod(k_i), NA))
+      dplyr::mutate(F_i = base::ifelse(!!event_ == 1, 1-base::cumprod(k_i), NA))
   }
     
   df <- df %>%
