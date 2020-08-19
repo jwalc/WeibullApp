@@ -81,7 +81,6 @@ ui <- navbarPage(title = "WeibullApp",
                      ),
                      fluidRow(
                          column(width = 6,
-                                dataTableOutput("lm_results"),
                                 dataTableOutput("weibull_params")),
                          column(width = 6, dataTableOutput("estimation_data"))
                      )
@@ -90,7 +89,9 @@ ui <- navbarPage(title = "WeibullApp",
     ),
     
     # --- --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    tabPanel("Parameter Estimation", "Coming Soon"),
+    tabPanel("Parameter Estimation",
+             dataTableOutput("lm_results")
+    ),
     
     # --- --- Weibull Explorer --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Weibull Explorer", 
