@@ -43,23 +43,10 @@ ui <- navbarPage(title = "WeibullApp",
                                                "Kaplan-Meier",
                                                "Johnson",
                                                "Sudden Death"),
-                                   multiple = TRUE),
-                    # Column selection
-                    selectizeInput(inputId = "exists_column",
-                                   label = "Which columns do exist in the given data?",
-                                   choices = c("Time" = "exists_time",
-                                               "Event" = "exists_event",
-                                               "Number of Events" = "exists_n_events",
-                                               "Sample Identificator" = "exists_sample"),
-                                   multiple = TRUE),
+                                   multiple = TRUE)
                 ),
                 # Main Panel
                 mainPanel(
-                    fluidRow(
-                        wellPanel(
-                            uiOutput("pick_columns")
-                        )
-                    ),
                     fluidRow(
                         dataTableOutput("picked_data")
                     )
@@ -137,24 +124,6 @@ server <- function(input, output) {
         read_csv(paste0("data/", input$example_data))
     })
     
-    output$pick_columns <- renderUI({
-        columns <- colnames(picked_data())
-        tagList(
-            if("exists_time" %in% input$exists_column) {
-                selectInput("example_time", "Please choose the column containing time data", columns)
-            },
-            if ("exists_event" %in% input$exists_column) {
-                selectInput("example_event", "Please choose the column containing type of event", columns)
-            },
-            if (any(c("Kaplan-Meier", "Johnson") %in% input$methods) & ("exists_n_events" %in% input$exists_column)) {
-                selectInput("example_n_events", "Please choose the column containing data on number of events", columns)
-            },
-            if ("Sudden Death" %in% input$methods & "exists_sample" %in% input$exists_column) {
-                selectInput("example_sample", "Please choose the column containing sample identificator", columns)
-            }
-        )
-    })
-    
     output$picked_data <- renderDataTable(options = list(scrollX = TRUE), {
         picked_data()
         })
@@ -175,12 +144,7 @@ server <- function(input, output) {
     
     estimation_data <- reactive({
         req(picked_data())
-        req(input$example_time, input$example_event)
         weibull_estimation(in_data = picked_data(),
-                           time = input$example_time,
-                           event = input$example_event,
-                           n_events = input$example_n_events,
-                           sample = input$example_sample,
                            estimation_method = input$methods)
     })
     
