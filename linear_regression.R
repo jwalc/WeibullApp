@@ -91,17 +91,19 @@ weibull_model <- function (in_data, time = "time", q = "F_i", method = "method")
   return(res)
 }
 
-weibull_paramters_from_model <- function (slope, intercept) {
+weibull_paramters_from_model <- function (slope, intercept, method) {
   #' @title Weibull Parameters from Linear Model
   #' 
   #' Returns Weibull parameters when given slope and intercept of underlying linear model.
   #' 
   #' @param slope numeric, slope estimate for linear model
-  #' @param intercept, numeric, intercept estimate for linear model
+  #' @param intercept numeric, intercept estimate for linear model
+  #' @param method character, name of quantile estimation method
   #' @return tibble, containing b and T parameters
 
   return(tibble(b = slope,
-                T = base::exp(- intercept / slope)))
+                T = base::exp(- intercept / slope),
+                method = method))
 }
 
 predict_path <- function (x_min, x_max, b, T, graining = 1000) {
