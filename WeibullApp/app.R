@@ -73,7 +73,10 @@ ui <- navbarPage(title = "WeibullApp",
     # --- --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Weibull Paper",
              sidebarLayout(
-                 sidebarPanel(width = 2
+                 sidebarPanel(width = 2,
+                              checkboxInput(inputId = "show_lines",
+                                            label = "Show regression lines?",
+                                            value = FALSE)
                  ),
                  mainPanel(width = 10,
                      fluidRow(
@@ -174,7 +177,11 @@ server <- function(input, output) {
     })
     
     output$paper_plot <- renderPlot({
-        weibull_q_plot(in_data = estimation_data())
+        if (input$show_lines) {
+            weibull_q_plot(in_data = estimation_data(), regr_line = predicted_paths())
+        } else {
+            weibull_q_plot(in_data = estimation_data())
+        }
     })
     
     linear_model <- reactive({
@@ -195,6 +202,13 @@ server <- function(input, output) {
     
     output$weibull_params <- renderDataTable(options = list(scrollX = TRUE), {
         weibull_params()
+    })
+    
+    predicted_paths <- reactive({
+        req(picked_data(), weibull_params())
+        predict_paths(weibull_params(),
+                      x_min = min(estimation_data()$time),
+                      x_max = max(estimation_data()$time))
     })
     
     # --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
