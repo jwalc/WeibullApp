@@ -73,10 +73,7 @@ ui <- navbarPage(title = "WeibullApp",
     # --- --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Weibull Paper",
              sidebarLayout(
-                 sidebarPanel(width = 2,
-                              checkboxInput(inputId = "add_lines",
-                                            label = "Add regression lines to plot?",
-                                            value = FALSE)
+                 sidebarPanel(width = 2
                  ),
                  mainPanel(width = 10,
                      fluidRow(
@@ -165,8 +162,7 @@ server <- function(input, output) {
     })
     
     output$paper_plot <- renderPlot({
-        weibull_q_plot(in_data = estimation_data(),
-                       regr_line = input$add_lines)
+        weibull_q_plot(in_data = estimation_data())
     })
     
     # --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
