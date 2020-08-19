@@ -92,6 +92,14 @@ weibull_model <- function (in_data, time = "time", q = "F_i", method = "method")
 }
 
 weibull_paramters_from_model <- function (slope, intercept) {
+  #' @title Weibull Parameters from Linear Model
+  #' 
+  #' Returns Weibull parameters when given slope and intercept of underlying linear model.
+  #' 
+  #' @param slope numeric, slope estimate for linear model
+  #' @param intercept, numeric, intercept estimate for linear model
+  #' @return tibble, containing b and T parameters
+
   return(tibble(b = slope,
                 T = base::exp(- intercept / slope)))
 }
