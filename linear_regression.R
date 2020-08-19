@@ -54,6 +54,18 @@ linear_regression <- function (y, x, alpha = 0.05) {
 }
 
 weibull_model <- function (in_data, time = "time", q = "F_i", method = "method") {
+  #' @title Linear Regression on Weibull Data
+  #' 
+  #' Performs a linear regression on time and estimated quantile data to compute a linear model.
+  #' This in turn can be used to compute the Weibull parameters b and T from the model's
+  #' slope and intercept.
+  #' 
+  #' @param in_data tibble, containing time and estimated quantiles
+  #' @param time character, name of column containing time data
+  #' @param q character, name of column containing estimated quantiles
+  #' @param method character, name of column containing estimation method identificator
+  #' @return tibble, containing linear regression output (see linear_regression)
+
   time_ <- base::as.symbol(time)
   q_ <- base::as.symbol(q)
   method_ <- base::as.symbol(method)
