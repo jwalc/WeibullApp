@@ -144,7 +144,7 @@ server <- function(input, output) {
         )
     })
     
-    output$picked_data <- renderDataTable({
+    output$picked_data <- renderDataTable(options = list(scrollX = TRUE), {
         picked_data()
         })
     
@@ -160,7 +160,7 @@ server <- function(input, output) {
                            estimation_method = input$methods)
     })
     
-    output$estimation_data <- renderDataTable({
+    output$estimation_data <- renderDataTable(options = list(scrollX = TRUE), {
         estimation_data()
     })
     
@@ -173,9 +173,9 @@ server <- function(input, output) {
         weibull_model(in_data = estimation_data())
     })
     
-    output$lm_results <- renderDataTable({
+    output$lm_results <- renderDataTable(options = list(scrollX = TRUE), {
         linear_model()
-    }, options = list(scrollX = TRUE))
+    })
     
     weibull_params <- reactive({
         req(linear_model())
@@ -184,7 +184,7 @@ server <- function(input, output) {
                                      method = linear_model()$method)
     })
     
-    output$weibull_params <- renderDataTable({
+    output$weibull_params <- renderDataTable(options = list(scrollX = TRUE), {
         weibull_params()
     })
     
