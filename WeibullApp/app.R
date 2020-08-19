@@ -120,10 +120,10 @@ server <- function(input, output) {
             if ("exists_event" %in% input$exists_column) {
                 selectInput("example_event", "Please choose the column containing type of event", columns)
             },
-            if (any(c("Kaplan-Meier", "Johnson") %in% input$methods) & "exists_n_events" %in% input$exists_column) {
+            if (any(c("kaplan_meier", "johnson") %in% input$methods) & ("exists_n_events" %in% input$exists_column)) {
                 selectInput("example_n_events", "Please choose the column containing data on number of events", columns)
             },
-            if ("Sudden Death" %in% input$methods & "exists_sample" %in% input$exists_column) {
+            if ("sudden_death" %in% input$methods & "exists_sample" %in% input$exists_column) {
                 selectInput("example_sample", "Please choose the column containing sample identificator", columns)
             }
         )
