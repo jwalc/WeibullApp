@@ -69,7 +69,9 @@ ui <- navbarPage(title = "WeibullApp",
     ),
     
     # --- --- Weibull Paper --- ---
-    tabPanel("Weibull Paper", "Coming Soon"),
+    tabPanel("Weibull Paper",
+             dataTableOutput("estimation_data")
+    ),
     
     # --- --- Parameter Estimation --- ---
     tabPanel("Parameter Estimation", "Coming Soon"),
