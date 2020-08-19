@@ -12,12 +12,13 @@ input_handler <- function (in_data) {
   
   } else if (base::is.vector(in_data)) {
     if (base::is.numeric(in_data)) {
+      # Assume all events are Failures
       df <- tibble::tibble(time = in_data,
-                   event = base::rep(0, base::length(in_data)))
+                   event = base::rep(1, base::length(in_data)))
     } else {
       warning("Trying to convert values to numerics. Assuming all events are failures.")
       df <- tibble::tibble(time = base::as.numeric(in_data),
-                           event = base::rep(0, base::length(in_data)))
+                           event = base::rep(1, base::length(in_data)))
       if (any(is.na(df))) {
         df <- tibble(time = NULL, event = NULL)
         warning("Could not convert data successfully.")
@@ -59,12 +60,12 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   
   if (!event %in% names(df)) {
     warning("Assuming all events are failures.")
-    df[event] <- base::rep(0,base::dim(df)[1])
+    df[event] <- base::rep(1,base::dim(df)[1])
   }
   
   df <- df %>%
     dplyr::arrange(!!time_) %>%
-    dplyr::filter(!!event_ == 0) %>%
+    dplyr::filter(!!event_ == 1) %>%
     dplyr::mutate(rank = base::seq(1:dplyr::n()))
   
   if (simplified) {
@@ -79,7 +80,7 @@ mr_regression <- function (in_data, time = "time", event = "event", simplified =
   }
   
   if (append) {
-    if (!all(df[event] == 0)) {
+    if (!all(df[event] == 1)) {
       warning("mr_regression does not consider right censored data!")
       df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
         dplyr::arrange(!!time_)
@@ -129,7 +130,7 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
     dplyr::group_by(!!sample_) %>%
     dplyr::mutate(n_sample = dplyr::n()) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(!!event_ == 0) %>%
+    dplyr::filter(!!event_ == 1) %>%
     dplyr::arrange(!!time_)
   
   df["rank"] <- c(1, base::rep(0, base::dim(df)[1] - 1))
@@ -176,7 +177,7 @@ nelson_method <- function (in_data, time = "time", event = "event", append = FAL
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
     dplyr::mutate(rank = base::seq(dplyr::n(), 1)) %>%
-    dplyr::filter(!!event_ == 0) %>%
+    dplyr::filter(!!event_ == 1) %>%
     dplyr::mutate(lambda_i = 1 / rank) %>%
     dplyr::mutate(H_i = base::cumsum(lambda_i)) %>%
     dplyr::mutate(F_i = 1 - base::exp(- H_i))
@@ -218,11 +219,11 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
   
   df <- in_data %>%
     dplyr::arrange(!!time_) %>%
-    dplyr::mutate(n_fail = base::ifelse(!!event_ == 0, !!n_events_, 0)) %>%
+    dplyr::mutate(n_fail = base::ifelse(!!event_ == 1, !!n_events_, 0)) %>%
     dplyr::mutate(n_i = base::sum(!!n_events_) - base::cumsum(!!n_events_) + !!n_events_) %>%
     dplyr::group_by(!!time_) %>%
     dplyr::mutate(n_i = base::max(n_i)) %>%
-    dplyr::mutate(km2 = all(!!event_ == 0))
+    dplyr::mutate(km2 = all(!!event_ == 1))
     
   
   if (pull(tail(df["km2"], 1))) {
@@ -232,13 +233,13 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
     df <- df %>%
       dplyr::ungroup() %>%
       dplyr::mutate(k_i = (n_i - n_fail + 1) / (n_i + 1)) %>%
-      dplyr::mutate(F_i = base::ifelse(!!event_ == 0, 1-base::cumprod(k_i), NA))
+      dplyr::mutate(F_i = base::ifelse(!!event_ == 1, 1-base::cumprod(k_i), NA))
   } else {
     # regular Kaplan-Meier
     df <- df %>%
       dplyr::ungroup() %>%
       dplyr::mutate(k_i = (n_i - n_fail) / n_i) %>%
-      dplyr::mutate(F_i = base::ifelse(!!event_ == 0, 1-base::cumprod(k_i), NA))
+      dplyr::mutate(F_i = base::ifelse(!!event_ == 1, 1-base::cumprod(k_i), NA))
   }
     
   df <- df %>%
@@ -284,7 +285,7 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
     dplyr::group_by(!!time_) %>%
     dplyr::mutate(n_out = base::min(n_out)) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(!!event_ == 0)
+    dplyr::filter(!!event_ == 1)
   
   k <- base::dim(df)[1]
   df["j"] <- c(as.numeric((N + 1) / (N + 1 - df["n_out"][1,])), base::rep(0, k-1))
