@@ -80,7 +80,8 @@ ui <- navbarPage(title = "WeibullApp",
                          plotOutput("paper_plot")
                      ),
                      fluidRow(
-                         column(width = 6),
+                         column(width = 6,
+                                dataTableOutput("lm_results")),
                          column(width = 6, dataTableOutput("estimation_data"))
                      )
                  )
@@ -164,6 +165,15 @@ server <- function(input, output) {
     output$paper_plot <- renderPlot({
         weibull_q_plot(in_data = estimation_data())
     })
+    
+    linear_model <- reactive({
+        req(estimation_data())
+        weibull_model(in_data = estimation_data())
+    })
+    
+    output$lm_results <- renderDataTable({
+        linear_model()
+    }, options = list(scrollX = TRUE))
     
     # --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     
