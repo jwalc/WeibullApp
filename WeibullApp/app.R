@@ -147,7 +147,7 @@ server <- function(input, output) {
         picked_data()
         })
     
-    # --- Weibull Paper --- --- --- --- ---
+    # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     estimation_data <- reactive({
         weibull_estimation(in_data = picked_data(),
                            time = input$example_time,
@@ -162,9 +162,8 @@ server <- function(input, output) {
     })
     
     output$paper_plot <- renderPlot({
-        req(estimation_data())
         weibull_q_plot(in_data = estimation_data(),
-                       regr_line = FALSE)
+                       regr_line = input$add_lines)
     })
     
     # --- Parameter Estimation --- --- --- --- ---
