@@ -90,8 +90,12 @@ server <- function(input, output) {
         tagList(
         selectInput("example_time", "Please choose the column containing time data", columns),
         selectInput("example_event", "Please choose the column containing type of event", columns),
-        selectInput("example_n_events", "Please choose the column containing data on number of events", columns),
+        if (any(c("Kaplan-Meier", "Johnson") %in% input$methods)) {
+        selectInput("example_n_events", "Please choose the column containing data on number of events", columns)
+        },
+        if ("Sudden Death" %in% input$methods) {
         selectInput("example_sample", "Please choose the column containing sample identificator", columns)
+        }
         )
     })
     
