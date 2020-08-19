@@ -28,7 +28,7 @@ weibull_x_axis <- function (x_vals) {
   ))
 }
 
-weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method", regr_line = FALSE) {
+weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method", regr_line = NULL) {
   #' @title Weibull Quantile Plot
   #' 
   #' Creates a Weibull quantile plot. Scales are transformed such that dots are linear.
@@ -72,42 +72,18 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
                        labels = weibull_x_axis_$labels) +
     geom_hline(yintercept = 1 - 1/exp(1), color = "blue", linetype = "dotted") +
     labs(title = "Weibull Plot", y = "Quantile in %")
-  
-  # add regression line
-  if (regr_line) {
-    if (!method %in% names(in_data)) {
-      # if it works, why change it?
-      df <- in_data %>%
-        dplyr::filter(!is.na(!!q_)) %>%
-        dplyr::mutate(y_transform = log(log(1 / (1 - !!q_))), x_transform = log(!!time_))
-      res <- linear_regression(dplyr::pull(df, y_transform), dplyr::pull(df, x_transform))
-      pred <- predict_path(x_min = min(df[time]),
-                           x_max = max(df[time]),
-                           b = res$slope,
-                           T = exp(- res$intercept / res$slope))
+    
+  # add regression lines
+  if(!is.null(regr_line)) {
+    
+    line_list <- regr_line %>%
+      group_by(method) %>%
+      group_split()
+    
+    for (line in line_list) {
+      m_name <- select(line, method) %>% distinct() %>% pull()
       w_plot <- w_plot +
-        geom_line(data = pred, aes(x = x, y = y), color = "red")
-    } else {
-      df_list <- in_data %>%
-        dplyr::filter(!is.na(!!q_)) %>%
-        dplyr::mutate(y_transform = log(log(1 / (1 - !!q_))), x_transform = log(!!time_)) %>%
-        dplyr::group_by(!!method_) %>%
-        dplyr::group_split()
-      x_min <- min(in_data[time])
-      x_max <- max(in_data[time])
-      
-      for (df in df_list) {
-        m_name <- select(df, !!method_) %>% distinct() %>% pull()
-        res <- linear_regression(dplyr::pull(df, y_transform), dplyr::pull(df, x_transform))
-        
-        # workaround for plotting a straight line with nonlinearly transformed axis
-        pred <- predict_path(x_min = x_min,
-                             x_max = x_max,
-                             b = res$slope,
-                             T = exp(- res$intercept / res$slope))
-        w_plot <- w_plot +
-          geom_line(data = pred, aes(x = x, y = y), color = color_values[m_name])
-      }
+        geom_line(data = line, aes(x = x, y = y), color = color_values[m_name])
     }
   }
 
