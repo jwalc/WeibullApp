@@ -130,6 +130,7 @@ server <- function(input, output) {
         })
     
     # --- Weibull Paper --- --- --- --- ---
+    weibullPaperServer()
     
     # --- Parameter Estimation --- --- --- --- ---
     
