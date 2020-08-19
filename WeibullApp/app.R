@@ -39,10 +39,10 @@ ui <- navbarPage(title = "WeibullApp",
                     selectizeInput(inputId = "methods",
                                    label = "Please choose estimation methods",
                                    choices = c("Median Rank" = "mr_regression",
-                                               "Sudden Death" = "sudden_death",
                                                "Nelson" = "nelson",
                                                "Kaplan-Meier" = "kaplan_meier",
-                                               "Johnson" = "johnson"),
+                                               "Johnson" = "johnson",
+                                               "Sudden Death" = "sudden_death"),
                                    multiple = TRUE),
                     # Column selection
                     selectizeInput(inputId = "exists_column",
@@ -74,9 +74,8 @@ ui <- navbarPage(title = "WeibullApp",
     tabPanel("Weibull Paper",
              sidebarLayout(
                  sidebarPanel(width = 2,
-                              checkboxInput(inputId = "show_lines",
-                                            label = "Show regression lines?",
-                                            value = FALSE)
+                              h4("Select what you want to see on the plot:"),
+                              uiOutput("plot_filter")
                  ),
                  mainPanel(width = 10,
                      fluidRow(
@@ -161,6 +160,24 @@ server <- function(input, output) {
         })
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    output$plot_filter <- renderUI({
+        methods <- input$methods
+        name_mapping <- c("mr_regression" = "Median Rank",
+                          "sudden_death" = "Sudden Death",
+                          "kaplan_meier" = "Kaplan-Meier",
+                          "nelson" = "Nelson",
+                          "johnson" = "Johnson")
+        tagList(
+            checkboxGroupInput(inputId = "plot_points",
+                               label = "Which methods shall be shown on the plot?",
+                               choices = name_mapping[methods],
+                               selected = name_mapping[methods]),
+            checkboxGroupInput(inputId = "plot_lines",
+                               label = "Which regression lines shall be shown?",
+                               choices = name_mapping[methods])
+        )
+    })
+    
     estimation_data <- reactive({
         req(picked_data())
         req(input$example_time, input$example_event)
@@ -177,11 +194,9 @@ server <- function(input, output) {
     })
     
     output$paper_plot <- renderPlot({
-        if (input$show_lines) {
-            weibull_q_plot(in_data = estimation_data(), regr_line = predicted_paths())
-        } else {
-            weibull_q_plot(in_data = estimation_data())
-        }
+        weibull_q_plot(in_data = filter(estimation_data(), method %in% input$plot_points),
+                       regr_line = filter(predicted_paths(), method %in% input$plot_lines))
+
     })
     
     linear_model <- reactive({
