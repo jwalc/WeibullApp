@@ -10,6 +10,15 @@
 library(shiny)
 library(tidyverse)
 
+# source function files
+source("../quantile_estimators.R")
+source("../plotting_functions.R")
+source("../linear_regression.R")
+
+# source app component files
+source("weibull_paper_panel.R")
+
+
 expl_time <- seq(0, 200, by = .25)
 example_data_list <- list.files(path = "./data/")
 
