@@ -52,3 +52,29 @@ linear_regression <- function (y, x, alpha = 0.05) {
   
   return(result)
 }
+
+weibull_model <- function (in_data, time = "time", q = "F_i", method = "method") {
+  time_ <- base::as.symbol(time)
+  q_ <- base::as.symbol(q)
+  method_ <- base::as.symbol(method)
+  
+  m_names <- in_data %>%
+    select(!!method_) %>%
+    distinct() %>%
+    pull()
+  
+  res <- tibble(NULL)
+  
+  df_list <- in_data %>%
+    dplyr::filter(!is.na(!!q_)) %>%
+    dplyr::mutate(y_transform = log(log(1 / (1 - !!q_))), x_transform = log(!!time_)) %>%
+    dplyr::group_by(!!method_) %>%
+    dplyr::group_split()
+  i <- 1
+  for (df in df_list) {
+    reg_result <- linear_regression(dplyr::pull(df, y_transform), dplyr::pull(df, x_transform))
+    reg_result$method <- df[method][1,] %>% pull()
+    res <- dplyr::bind_rows(res, reg_result)
+  }
+  return(res)
+}
