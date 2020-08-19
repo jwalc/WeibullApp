@@ -78,12 +78,13 @@ ui <- navbarPage(title = "WeibullApp",
                                             label = "Add regression lines to plot?",
                                             value = FALSE)
                  ),
-                 mainPanel(
+                 mainPanel(width = 10,
                      fluidRow(
                          plotOutput("paper_plot")
                      ),
                      fluidRow(
-                         dataTableOutput("estimation_data")
+                         column(width = 6),
+                         column(width = 6, dataTableOutput("estimation_data"))
                      )
                  )
              )
