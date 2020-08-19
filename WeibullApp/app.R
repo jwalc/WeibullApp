@@ -60,7 +60,9 @@ ui <- navbarPage(title = "WeibullApp",
                             uiOutput("pick_columns")
                         )
                     ),
-                    dataTableOutput("picked_data")
+                    fluidRow(
+                        dataTableOutput("picked_data")
+                    )
                 )
             )
         ),
