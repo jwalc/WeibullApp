@@ -135,14 +135,12 @@ server <- function(input, output) {
     
     # --- Weibull Paper --- --- --- --- ---
     estimation_data <- reactive({
-        print("I'm estimating")
-        df <- weibull_estimation(in_data = picked_data(),
+        weibull_estimation(in_data = picked_data(),
                            time = input$example_time,
                            event = input$example_event,
                            n_events = input$example_n_events,
                            sample = input$example_sample,
                            estimation_method = input$methods)
-        df
     })
     
     output$estimation_data <- renderDataTable({
