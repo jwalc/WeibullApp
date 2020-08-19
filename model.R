@@ -136,12 +136,12 @@ predict_paths <- function (weibull_parameters, x_min, x_max) {
   #' @return tibble, x and y values for Weibull Paper Plot and method identificator
 
   res <- tibble(NULL)
-  for (i in 1:dim(wb_params)[1]) {
+  for (i in 1:dim(weibull_parameters)[1]) {
     path <- predict_path(x_min = x_min,
                          x_max = x_max,
-                         b = wb_params[i,]$b,
-                         T = wb_params[i,]$T)
-    path$method <- wb_params[i,]$method
+                         b = weibull_parameters[i,]$b,
+                         T = weibull_parameters[i,]$T)
+    path$method <- weibull_parameters[i,]$method
     res <- bind_rows(res, path)
   }
   return(res)

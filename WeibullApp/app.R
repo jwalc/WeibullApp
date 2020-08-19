@@ -38,11 +38,11 @@ ui <- navbarPage(title = "WeibullApp",
                     # Method selection
                     selectizeInput(inputId = "methods",
                                    label = "Please choose estimation methods",
-                                   choices = c("Median Rank" = "mr_regression",
-                                               "Nelson" = "nelson",
-                                               "Kaplan-Meier" = "kaplan_meier",
-                                               "Johnson" = "johnson",
-                                               "Sudden Death" = "sudden_death"),
+                                   choices = c("Median Rank",
+                                               "Nelson",
+                                               "Kaplan-Meier",
+                                               "Johnson",
+                                               "Sudden Death"),
                                    multiple = TRUE),
                     # Column selection
                     selectizeInput(inputId = "exists_column",
@@ -146,10 +146,10 @@ server <- function(input, output) {
             if ("exists_event" %in% input$exists_column) {
                 selectInput("example_event", "Please choose the column containing type of event", columns)
             },
-            if (any(c("kaplan_meier", "johnson") %in% input$methods) & ("exists_n_events" %in% input$exists_column)) {
+            if (any(c("Kaplan-Meier", "Johnson") %in% input$methods) & ("exists_n_events" %in% input$exists_column)) {
                 selectInput("example_n_events", "Please choose the column containing data on number of events", columns)
             },
-            if ("sudden_death" %in% input$methods & "exists_sample" %in% input$exists_column) {
+            if ("Sudden Death" %in% input$methods & "exists_sample" %in% input$exists_column) {
                 selectInput("example_sample", "Please choose the column containing sample identificator", columns)
             }
         )
@@ -162,19 +162,14 @@ server <- function(input, output) {
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     output$plot_filter <- renderUI({
         methods <- input$methods
-        name_mapping <- c("mr_regression" = "Median Rank",
-                          "sudden_death" = "Sudden Death",
-                          "kaplan_meier" = "Kaplan-Meier",
-                          "nelson" = "Nelson",
-                          "johnson" = "Johnson")
         tagList(
             checkboxGroupInput(inputId = "plot_points",
                                label = "Which methods shall be shown on the plot?",
-                               choices = name_mapping[methods],
-                               selected = name_mapping[methods]),
+                               choices = methods,
+                               selected = methods),
             checkboxGroupInput(inputId = "plot_lines",
                                label = "Which regression lines shall be shown?",
-                               choices = name_mapping[methods])
+                               choices = methods)
         )
     })
     

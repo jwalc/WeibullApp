@@ -311,7 +311,7 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
 }
 
 weibull_estimation <- function(in_data, time = "time", event = "event", n_events = "n_events",
-                               sample = "sample", estimation_method = "mr_regression") {
+                               sample = "sample", estimation_method = "Median Rank") {
   #' @title Weibull Quantile Estimation Wrapper Method
   #' 
   #' Computes Weibull Quantiles using given estimation method. Supports Median Rank Regression,
@@ -326,35 +326,35 @@ weibull_estimation <- function(in_data, time = "time", event = "event", n_events
   #' "mr_regression", "sudden_death", "kaplan_meier", "nelson", "johnson"
   #' @return tibble with three columns: time, F_i and method
   
-  if ("mr_regression" %in% estimation_method) {
+  if ("Median Rank" %in% estimation_method) {
     df_mr <- mr_regression(in_data = in_data, time = time, event = event,
                            simplified = FALSE, append = FALSE)
   } else {
     df_mr <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
   
-  if ("sudden_death" %in% estimation_method) {
+  if ("Sudden Death" %in% estimation_method) {
     df_sd <- johnson_sd_method(in_data = in_data, time = time, event = event,
                                sample = sample, append = FALSE)
   } else {
     df_sd <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
   
-  if ("kaplan_meier" %in% estimation_method) {
+  if ("Kaplan-Meier" %in% estimation_method) {
     df_km <- kaplan_meier_method(in_data = in_data, time = time, event = event,
                                  n_events = n_events, append = FALSE)
   } else {
     df_km <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
   
-  if("nelson" %in% estimation_method) {
+  if("Nelson" %in% estimation_method) {
     df_ne <- nelson_method(in_data = in_data, time = time, event = event,
                            append = FALSE)
   } else {
     df_ne <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
   
-  if ("johnson" %in% estimation_method) {
+  if ("Johnson" %in% estimation_method) {
     df_jo <- johnson_method(in_data = in_data, time = time, event = event,
                             n_events = n_events, append = FALSE)
   } else {
