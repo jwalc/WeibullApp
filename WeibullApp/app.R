@@ -81,8 +81,17 @@ ui <- navbarPage(title = "WeibullApp",
                      ),
                      fluidRow(
                          column(width = 6,
-                                dataTableOutput("weibull_params")),
-                         column(width = 6, dataTableOutput("estimation_data"))
+                                wellPanel(
+                                    h3("Weibull Parameters"),
+                                    dataTableOutput("weibull_params")
+                                )
+                         ),
+                         column(width = 6,
+                                wellPanel(
+                                    h3("Estimated Quantiles"),
+                                    dataTableOutput("estimation_data")
+                                )
+                         )
                      )
                  )
              )
