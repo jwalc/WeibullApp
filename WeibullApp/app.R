@@ -28,16 +28,25 @@ ui <- navbarPage(title = "WeibullApp",
                                 choices = example_data_list),
                     # Method selection
                     selectizeInput(inputId = "methods",
-                                label = "Please choose estimation methods",
-                                choices = c("Median Rank", "Sudden Death", "Nelson", "Kaplan-Meier", "Johnson"),
-                                multiple = TRUE),
+                                   label = "Please choose estimation methods",
+                                   choices = c("Median Rank", "Sudden Death", "Nelson", "Kaplan-Meier", "Johnson"),
+                                   multiple = TRUE),
                     # Column selection
-                    wellPanel(
-                        uiOutput("pick_columns")
-                        )
+                    selectizeInput(inputId = "exists_column",
+                                   label = "Which columns do exist in the given data?",
+                                   choices = c("Time" = "exists_time",
+                                               "Event" = "exists_event",
+                                               "Number of Events" = "exists_n_events",
+                                               "Sample Identificator" = "exists_sample"),
+                                   multiple = TRUE),
                 ),
                 # Main Panel
                 mainPanel(
+                    fluidRow(
+                        wellPanel(
+                            uiOutput("pick_columns")
+                        )
+                    ),
                     dataTableOutput("picked_data")
                 )
             )
@@ -88,14 +97,18 @@ server <- function(input, output) {
     output$pick_columns <- renderUI({
         columns <- colnames(picked_data())
         tagList(
-        selectInput("example_time", "Please choose the column containing time data", columns),
-        selectInput("example_event", "Please choose the column containing type of event", columns),
-        if (any(c("Kaplan-Meier", "Johnson") %in% input$methods)) {
-        selectInput("example_n_events", "Please choose the column containing data on number of events", columns)
-        },
-        if ("Sudden Death" %in% input$methods) {
-        selectInput("example_sample", "Please choose the column containing sample identificator", columns)
-        }
+            if("exists_time" %in% input$exists_column) {
+                selectInput("example_time", "Please choose the column containing time data", columns)
+            },
+            if ("exists_event" %in% input$exists_column) {
+                selectInput("example_event", "Please choose the column containing type of event", columns)
+            },
+            if (any(c("Kaplan-Meier", "Johnson") %in% input$methods) & "exists_n_events" %in% input$exists_column) {
+                selectInput("example_n_events", "Please choose the column containing data on number of events", columns)
+            },
+            if ("Sudden Death" %in% input$methods & "exists_sample" %in% input$exists_column) {
+                selectInput("example_sample", "Please choose the column containing sample identificator", columns)
+            }
         )
     })
     
