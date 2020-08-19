@@ -24,7 +24,7 @@ example_data_list <- list.files(path = "./data/")
 
 # Define UI for application that draws a histogram
 ui <- navbarPage(title = "WeibullApp",
-    # --- --- Data Picker --- ---
+    # --- --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     navbarMenu(title = "Data Picker",
         # --- Datasets ---
         tabPanel("Datasets",
@@ -121,7 +121,7 @@ ui <- navbarPage(title = "WeibullApp",
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     
-    # --- Data Picker --- --- --- --- ---
+    # --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     picked_data <- reactive({
         read_csv(paste0("data/", input$example_data))
     })
@@ -169,9 +169,9 @@ server <- function(input, output) {
                        regr_line = input$add_lines)
     })
     
-    # --- Parameter Estimation --- --- --- --- ---
+    # --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     
-    # --- Weibull Explorer --- --- --- --- ---
+    # --- Weibull Explorer --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     expl_data <- reactive({
         tibble(x = expl_time,
                f = dweibull(expl_time, shape = input$expl_b, scale = input$expl_T),
