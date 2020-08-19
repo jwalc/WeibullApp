@@ -150,6 +150,8 @@ server <- function(input, output) {
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     estimation_data <- reactive({
+        req(picked_data())
+        req(input$example_time, input$example_event)
         weibull_estimation(in_data = picked_data(),
                            time = input$example_time,
                            event = input$example_event,
