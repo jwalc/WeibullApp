@@ -78,3 +78,8 @@ weibull_model <- function (in_data, time = "time", q = "F_i", method = "method")
   }
   return(res)
 }
+
+weibull_paramters_from_model <- function (slope, intercept) {
+  return(tibble(b = slope,
+                T = base::exp(- intercept / slope)))
+}
