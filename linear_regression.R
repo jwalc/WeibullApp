@@ -123,3 +123,26 @@ predict_path <- function (x_min, x_max, b, T, graining = 1000) {
     select(x, y)
   return(pred_data)
 }
+
+predict_paths <- function (weibull_parameters, x_min, x_max) {
+  #' @title Predict Regression Line for Weibull Paper Plot
+  #' 
+  #' Computes regression lines for a set of given weibull_paramters. These should come
+  #' from the weibull_parameters_from_model function or resemble there structure and naming.
+  #' 
+  #' @param weibull_parameters tibble, see output from weibull_parameters_from_model
+  #' @param x_min numeric, lower bound for intervall on which to compute the line
+  #' @param x_max numeric, upper bound for intervall on which to compute the line
+  #' @return tibble, x and y values for Weibull Paper Plot and method identificator
+
+  res <- tibble(NULL)
+  for (i in 1:dim(wb_params)[1]) {
+    path <- predict_path(x_min = x_min,
+                         x_max = x_max,
+                         b = wb_params[i,]$b,
+                         T = wb_params[i,]$T)
+    path$method <- wb_params[i,]$method
+    res <- bind_rows(res, path)
+  }
+  return(res)
+}
