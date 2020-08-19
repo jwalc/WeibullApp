@@ -13,7 +13,7 @@ library(tidyverse)
 # source function files
 source("../quantile_estimators.R")
 source("../plotting_functions.R")
-source("../linear_regression.R")
+source("../model.R")
 
 # source app component files
 source("weibull_paper_panel.R")
