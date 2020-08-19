@@ -147,9 +147,11 @@ server <- function(input, output) {
         estimation_data()
     })
     
-    # output$paper_plot <- renderPlot({
-    #     
-    # })
+    output$paper_plot <- renderPlot({
+        req(estimation_data())
+        weibull_q_plot(in_data = estimation_data(),
+                       regr_line = FALSE)
+    })
     
     # --- Parameter Estimation --- --- --- --- ---
     
