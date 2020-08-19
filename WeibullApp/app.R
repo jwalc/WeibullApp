@@ -29,7 +29,11 @@ ui <- navbarPage(title = "WeibullApp",
                     # Method selection
                     selectizeInput(inputId = "methods",
                                    label = "Please choose estimation methods",
-                                   choices = c("Median Rank", "Sudden Death", "Nelson", "Kaplan-Meier", "Johnson"),
+                                   choices = c("Median Rank" = "mr_regression",
+                                               "Sudden Death" = "sudden_death",
+                                               "Nelson" = "nelson",
+                                               "Kaplan-Meier" = "kaplan_meier",
+                                               "Johnson" = "johnson"),
                                    multiple = TRUE),
                     # Column selection
                     selectizeInput(inputId = "exists_column",
