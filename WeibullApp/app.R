@@ -70,15 +70,29 @@ ui <- navbarPage(title = "WeibullApp",
         tabPanel("Upload Data", "Coming Soon")
     ),
     
-    # --- --- Weibull Paper --- ---
+    # --- --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Weibull Paper",
-             dataTableOutput("estimation_data")
+             sidebarLayout(
+                 sidebarPanel(width = 2,
+                              checkboxInput(inputId = "add_lines",
+                                            label = "Add regression lines to plot?",
+                                            value = FALSE)
+                 ),
+                 mainPanel(
+                     fluidRow(
+                         plotOutput("paper_plot")
+                     ),
+                     fluidRow(
+                         dataTableOutput("estimation_data")
+                     )
+                 )
+             )
     ),
     
-    # --- --- Parameter Estimation --- ---
+    # --- --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Parameter Estimation", "Coming Soon"),
     
-    # --- --- Weibull Explorer --- ---
+    # --- --- Weibull Explorer --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Weibull Explorer", 
              sidebarLayout(
                  sidebarPanel(width = 3,
