@@ -155,6 +155,7 @@ server <- function(input, output) {
     })
     
     output$paper_plot <- renderPlot({
+        req(estimation_data(), predicted_paths())
         weibull_q_plot(in_data = filter(estimation_data(), method %in% input$plot_points),
                        regr_line = filter(predicted_paths(), method %in% input$plot_lines),
                        xlim = estimation_data()$time)
