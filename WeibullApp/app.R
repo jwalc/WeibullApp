@@ -24,7 +24,7 @@ source("import_csv_module.R")
 expl_time <- seq(0, 200, by = .25)
 example_data_list <- list.files(path = "./data/")
 
-# Define UI for application that draws a histogram
+# Define UI
 ui <- navbarPage(theme = shinytheme("slate"),
                  title = "WeibullApp",
     # --- --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -143,7 +143,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
              ))
 )
 
-# Define server logic required to draw a histogram
+# Define server logic
 server <- function(input, output) {
     
     # --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
