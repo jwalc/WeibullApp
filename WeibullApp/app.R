@@ -153,7 +153,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
 server <- function(input, output) {
     
     # --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    # Let the User select a .csv file --- ---
+    # Selection of a .csv file --- ---
     picked_data <- reactive({
         read_csv(paste0("data/", input$example_data))
     })
@@ -169,7 +169,7 @@ server <- function(input, output) {
         imported_data()
     })
     
-    # Let the User convert the imported data --- ---
+    # Converting the imported data --- ---
     colnames_imported <- reactive({
         names(imported_data())
     })
@@ -212,6 +212,13 @@ server <- function(input, output) {
     output$converted_data <- renderDataTable(options = list(scrollX = TRUE), {
         req(converted_data())
         converted_data()
+    })
+    
+    # Saving converted data --- ---
+    observe({
+        req(converted_data())
+        if (input$save_data == 0) return()
+        save_user_data(input$save_filename, converted_data())
     })
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
