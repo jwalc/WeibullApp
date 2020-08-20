@@ -35,9 +35,11 @@ ui <- navbarPage(theme = shinytheme("slate"),
                 # Sidebar
                 sidebarPanel(width = 3,
                     # Data selection
-                    selectInput(inputId = "example_data",
-                                label = "Please choose an example dataset",
-                                choices = example_data_list),
+                    radioButtons(inputId = "source_data",
+                                 label = "Which data do you want to use?",
+                                 choices = c("Example Data", "User Data"),
+                                 selected = "Example Data"),
+                    uiOutput("data_picker"),
                     # Method selection
                     selectizeInput(inputId = "methods",
                                    label = "Please choose estimation methods",
@@ -153,16 +155,40 @@ ui <- navbarPage(theme = shinytheme("slate"),
 server <- function(input, output) {
     
     # --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    
     # Selection of a .csv file --- ---
+    available_data <- reactive({
+        if (input$source_data == "Example Data") {
+            list.files(path = "./data/", pattern = "*.csv")
+        } else {
+            list.files(path = "./data/user_data/")
+        }
+    })
+    
+    output$data_picker <- renderUI({
+        tagList(
+            selectInput(inputId = "picked_data",
+                        label = "Please choose a dataset",
+                        choices = available_data())
+        )
+    })
+    
     picked_data <- reactive({
-        read_csv(paste0("data/", input$example_data))
+        if (input$source_data == "Example Data") {
+            read_csv(paste0("data/", input$picked_data))
+        } else {
+            read_csv(paste0("data/user_data/", input$picked_data))
+        }
     })
     
     output$picked_data <- renderDataTable(options = list(scrollX = TRUE), {
+        req(picked_data())
         picked_data()
         })
     
+    # Data Import Panel --- --- ---
     imported_data <- csvImportServer("import_file")
+    
     # show imported data
     output$import_table <- renderDataTable(options = list(scrollX = TRUE), {
         req(imported_data())
