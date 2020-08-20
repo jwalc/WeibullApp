@@ -28,6 +28,8 @@ example_data_list <- list.files(path = "./data/")
 # Define UI
 ui <- navbarPage(theme = shinytheme("slate"),
                  title = "WeibullApp",
+    tabPanel(title = "Welcome", "Coming Soon"),
+    
     # --- --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     navbarMenu(title = "Data Picker",
         # --- Datasets ---
