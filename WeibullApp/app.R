@@ -156,10 +156,55 @@ server <- function(input, output) {
         })
     
     imported_data <- csvImportServer("import_file")
-    
-    output$import_table <- renderDataTable({
+    # show imported data
+    output$import_table <- renderDataTable(options = list(scrollX = TRUE), {
         req(imported_data())
         imported_data()
+    })
+    
+    # Let the User convert the imported data --- ---
+    colnames_imported <- reactive({
+        names(imported_data())
+    })
+    
+    output$convert_controls <- renderUI({
+        tagList(
+            selectInput(inputId = "convert_time",
+                        label = "Select time column",
+                        choices = c(NA, colnames_imported()),
+                        selected = NA,
+                        multiple = FALSE),
+            selectInput(inputId = "convert_event",
+                        label = "Select event column",
+                        choices = c(NA, colnames_imported()),
+                        selected = NA,
+                        multiple = FALSE),
+            selectInput(inputId = "convert_n_events",
+                        label = "Select n_events column",
+                        choices = c(NA, colnames_imported()),
+                        selected = NA,
+                        multiple = FALSE),
+            selectInput(inputId = "convert_sample",
+                        label = "Select sample column",
+                        choices = c(NA, colnames_imported()),
+                        selected = NA,
+                        multiple = FALSE),
+            actionButton(inputId = "submit_convert",
+                         label = "Convert")
+        )
+    })
+    
+    converted_data <- eventReactive(input$submit_convert, {
+        convert_data(in_data = imported_data(),
+                     time = input$convert_time,
+                     event = input$convert_event,
+                     n_events = input$convert_n_events,
+                     sample = input$convert_sample)
+    })
+    
+    output$converted_data <- renderDataTable(options = list(scrollX = TRUE), {
+        req(converted_data())
+        converted_data()
     })
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
