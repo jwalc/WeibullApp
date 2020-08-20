@@ -15,13 +15,12 @@ library(tidyverse)
 source("../quantile_estimators.R")
 source("../plotting_functions.R")
 source("../model.R")
-source("import_csv_module.R")
 source("data_converter.R")
 
-# source app component files
-# source("weibull_paper_panel.R")
+# source Shiny modules
+source("import_csv_module.R")
 
-
+# set global variables
 expl_time <- seq(0, 200, by = .25)
 example_data_list <- list.files(path = "./data/")
 
