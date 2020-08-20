@@ -22,7 +22,6 @@ source("modules/import_csv_module.R")
 source("modules/weibull_explorer_module.R")
 
 # set global variables
-expl_time <- seq(0, 200, by = .25)
 example_data_list <- list.files(path = "./data/")
 
 # Define UI
