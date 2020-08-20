@@ -19,6 +19,7 @@ source("data_converter.R")
 
 # source Shiny modules
 source("import_csv_module.R")
+source("weibull_explorer_module.R")
 
 # set global variables
 expl_time <- seq(0, 200, by = .25)
@@ -138,27 +139,8 @@ ui <- navbarPage(theme = shinytheme("slate"),
     
     # --- --- Weibull Explorer --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Weibull Explorer", 
-             sidebarLayout(
-                 sidebarPanel(width = 3,
-                     sliderInput(inputId = "expl_b",
-                                 label = "Choose a value for b",
-                                 min = 0.1, max = 3, value = 2.5),
-                     sliderInput(inputId = "expl_T",
-                                 label = "Choose a value for T",
-                                 min = min(expl_time), max = max(expl_time)/2,
-                                 value = (max(expl_time) + min(expl_time)/2) / 2)
-                 ),
-                 mainPanel(width = 9,
-                     fluidRow(
-                         column(6, plotOutput("expl_F")),
-                         column(6, plotOutput("expl_lambda"))
-                     ),
-                     fluidRow(
-                         column(6, plotOutput("expl_f")),
-                         column(6)
-                     )
-                 )
-             ))
+             weibullExplorerUI("explorer")
+    )
 )
 
 # Define server logic
@@ -319,34 +301,7 @@ server <- function(input, output) {
     # --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     
     # --- Weibull Explorer --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    expl_data <- reactive({
-        tibble(x = expl_time,
-               f = dweibull(expl_time, shape = input$expl_b, scale = input$expl_T),
-               F = pweibull(expl_time, shape = input$expl_b, scale = input$expl_T),
-               lambda = f / (1 - F))
-    })
-    
-    output$expl_f <- renderPlot({
-        ggplot(data = expl_data(), aes(x = x, y = f)) +
-            geom_line() +
-            labs(x = "time", y = expression(f(t)), title = "Density Plot") +
-            xlim(min(expl_time), max(expl_time))
-    })
-    
-    output$expl_F <- renderPlot({
-        ggplot(data = expl_data(), aes(x = x, y = F)) +
-            geom_line() +
-            labs(x = "time", y = expression(F(t)), title = "Distribution Plot") +
-            xlim(min(expl_time), max(expl_time)) +
-            ylim(0, 1)
-    })
-    
-    output$expl_lambda <- renderPlot({
-        ggplot(data = expl_data(), aes(x = x, y = lambda)) +
-            geom_line() +
-            labs(x = "time", y = expression(lambda(t)), title = "Failure Rate") +
-            xlim(min(expl_time), max(expl_time))
-    })
+    weibullExplorerServer("explorer")
 }
 
 # Run the application 
