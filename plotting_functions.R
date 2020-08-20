@@ -28,7 +28,7 @@ weibull_x_axis <- function (x_vals) {
   ))
 }
 
-weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method", regr_line = NULL) {
+weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method", regr_line = NULL, xlim = NULL) {
   #' @title Weibull Quantile Plot
   #' 
   #' Creates a Weibull quantile plot. Scales are transformed such that dots are linear.
@@ -37,6 +37,8 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
   #' @param time character, name of column containing time data
   #' @param q character, name of column containing quantile estimations
   #' @param method character, name of column containing method identificator
+  #' @param regr_line tibble, containing regression line data for every method
+  #' @param xlim numeric, vector containing time data which to calculate xlimits for
   #' @return ggplot object
 
   time_ <- as.symbol(time)
@@ -44,7 +46,12 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
   method_ <- as.symbol(method)
   
   # compute breaks, limits and labels for x-axis
-  weibull_x_axis_ <- weibull_x_axis(in_data[time])
+  if (base::is.null(xlim)) {
+    weibull_x_axis_ <- weibull_x_axis(in_data[time])
+  } else {
+    weibull_x_axis_ <- weibull_x_axis(xlim)
+  }
+  
   
   # if method column exists, color dots by method
   if (!method %in% names(in_data)) {
