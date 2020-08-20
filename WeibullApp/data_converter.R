@@ -43,3 +43,7 @@ convert_data <- function(in_data, time = NA, event = NA, n_events = NA, sample =
   
   return(df)
 }
+
+list_user_data <- function (filename, path = "./data/user_data/") {
+  return(base::list.files(path = path))
+}
