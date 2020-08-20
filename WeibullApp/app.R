@@ -15,6 +15,7 @@ library(tidyverse)
 source("../quantile_estimators.R")
 source("../plotting_functions.R")
 source("../model.R")
+source("import_csv_module.R")
 
 # source app component files
 source("weibull_paper_panel.R")
@@ -56,7 +57,15 @@ ui <- navbarPage(theme = shinytheme("slate"),
             )
         ),
         # --- Upload Data ---
-        tabPanel("Upload Data", "Coming Soon")
+        tabPanel("Import Data",
+                 sidebarLayout(
+                     sidebarPanel(
+                         csvImportUI("import_file")
+                     ),
+                     mainPanel(
+                         dataTableOutput("import_table")
+                     )
+                 ))
     ),
     
     # --- --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -132,6 +141,13 @@ server <- function(input, output) {
     output$picked_data <- renderDataTable(options = list(scrollX = TRUE), {
         picked_data()
         })
+    
+    imported_data <- csvImportServer("import_file")
+    
+    output$import_table <- renderDataTable({
+        req(imported_data())
+        imported_data()
+    })
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     output$plot_filter <- renderUI({
