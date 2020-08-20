@@ -1,4 +1,4 @@
-convert_data <- function(in_data, time = NULL, event = NULL, n_events = NULL, sample = NULL) {
+convert_data <- function(in_data, time = NA, event = NA, n_events = NA, sample = NA) {
   #' @title Convert Data to supported format
   #' 
   #' Takes in a DataFrame or tibble and converts it to a tibble of the format currently supported
@@ -13,28 +13,28 @@ convert_data <- function(in_data, time = NULL, event = NULL, n_events = NULL, sa
 
   n_rows <- base::dim(in_data)[1]
   
-  if (base::is.null(time)) {
+  if (base::is.na(time) | time == "NA") {
     warning("The is no column containing time data!")
     return(NULL)
   } else {
     df <- tibble::tibble(time = dplyr::pull(in_data[time]))
   }
   
-  if (base::is.null(event)) {
+  if (base::is.na(event) | event == "NA") {
     warning("No event column given! Assuming all events to be failures!")
     df$event <- base::rep(1, n_rows)
   } else {
     df$event <- in_data[event]
   }
   
-  if (base::is.null(n_events)) {
+  if (base::is.na(n_events) | n_events == "NA") {
     warning("No column specifying number of events given! Assuming each row consists of one event!")
     df$n_events <- base::rep(1, n_rows)
   } else {
     df$n_events <- in_data[n_events]
   }
   
-  if (base::is.null(sample)) {
+  if (base::is.na(sample) | sample == "NA") {
     warning("No column for sample identification given! Assuming all data comes from one sample!")
     df$sample <- base::rep("A", n_rows)
   } else {
