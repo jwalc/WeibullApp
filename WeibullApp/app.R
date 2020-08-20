@@ -22,6 +22,7 @@ source("functions/data_converter.R")
 source("modules/import_csv_module.R")
 source("modules/weibull_explorer_module.R")
 source("modules/import_xlsx_module.R")
+source("modules/converter_module.R")
 
 # set global variables
 example_data_list <- list.files(path = "./data/")
@@ -67,7 +68,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
                  wellPanel(
                      sidebarLayout(
                          sidebarPanel(width = 3,
-                             csvImportUI("import_file")
+                             csvImportUI("import_csv")
                          ),
                          mainPanel(width = 9,
                              dataTableOutput("import_table")
@@ -75,25 +76,15 @@ ui <- navbarPage(theme = shinytheme("slate"),
                     )
                  ),
                  wellPanel(
-                     sidebarLayout(
-                         sidebarPanel(width = 3,
-                             uiOutput("convert_controls"),
-                             tags$hr(),
-                             textInput(inputId = "save_filename",
-                                       label = "Save as file",
-                                       placeholder = "filename.csv"),
-                             actionButton(inputId = "save_data",
-                                          label = "Save")
-                         ),
-                         mainPanel(width = 9,
-                             dataTableOutput("converted_data")
-                         )
-                     )
+                     dataConverterUI("convert_csv")
                  )
         ),
         tabPanel("Import Excel",
                  wellPanel(
-                    xlsxImportUI("xlsx")
+                    xlsxImportUI("import_xlsx")
+                 ),
+                 wellPanel(
+                     dataConverterUI("convert_xlsx")
                  )
         )
     ),
@@ -187,67 +178,19 @@ server <- function(input, output) {
         })
     
     # Data Import Panel --- --- ---
-    imported_data <- csvImportServer("import_file")
+    imported_data <- csvImportServer("import_csv")
     
-    imported_data_2 <- xlsxImportServer("xlsx")
+    imported_data_2 <- xlsxImportServer("import_xlsx")
     
-    # show imported data
+    # Data Converter
     output$import_table <- renderDataTable(options = list(scrollX = TRUE), {
         req(imported_data())
         imported_data()
     })
     
-    # Converting the imported data --- ---
-    colnames_imported <- reactive({
-        names(imported_data())
-    })
+    dataConverterServer("convert_csv", imported_data)
+    dataConverterServer("convert_xlsx", imported_data_2)
     
-    output$convert_controls <- renderUI({
-        tagList(
-            selectInput(inputId = "convert_time",
-                        label = "Select time column",
-                        choices = c(NA, colnames_imported()),
-                        selected = NA,
-                        multiple = FALSE),
-            selectInput(inputId = "convert_event",
-                        label = "Select event column",
-                        choices = c(NA, colnames_imported()),
-                        selected = NA,
-                        multiple = FALSE),
-            selectInput(inputId = "convert_n_events",
-                        label = "Select n_events column",
-                        choices = c(NA, colnames_imported()),
-                        selected = NA,
-                        multiple = FALSE),
-            selectInput(inputId = "convert_sample",
-                        label = "Select sample column",
-                        choices = c(NA, colnames_imported()),
-                        selected = NA,
-                        multiple = FALSE),
-            actionButton(inputId = "submit_convert",
-                         label = "Convert")
-        )
-    })
-    
-    converted_data <- eventReactive(input$submit_convert, {
-        convert_data(in_data = imported_data(),
-                     time = input$convert_time,
-                     event = input$convert_event,
-                     n_events = input$convert_n_events,
-                     sample = input$convert_sample)
-    })
-    
-    output$converted_data <- renderDataTable(options = list(scrollX = TRUE), {
-        req(converted_data())
-        converted_data()
-    })
-    
-    # Saving converted data --- ---
-    observe({
-        req(converted_data())
-        if (input$save_data == 0) return()
-        save_user_data(input$save_filename, converted_data())
-    })
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     output$plot_filter <- renderUI({
