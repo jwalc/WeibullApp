@@ -123,7 +123,17 @@ ui <- navbarPage(theme = shinytheme("slate"),
     
     # --- --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Parameter Estimation",
-             dataTableOutput("lm_results")
+             fluidRow(
+                 h3("Linear Regression"),
+                 p("Results from linear regression on transformed time and quantile values:"),
+                 dataTableOutput("lm_results")
+                 ),
+             hr(),
+             fluidRow(
+                 h3("Weibull Parameters"),
+                 p("Estimation of Weibull parameters based on linear regression results:"),
+                 dataTableOutput("weibull_params_2")
+             )
     ),
     
     # --- --- Weibull Explorer --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -295,7 +305,7 @@ server <- function(input, output) {
                                      method = linear_model()$method)
     })
     
-    output$weibull_params <- renderDataTable(options = list(scrollX = TRUE), {
+    output$weibull_params <- output$weibull_params_2 <- renderDataTable(options = list(scrollX = TRUE), {
         weibull_params()
     })
     
