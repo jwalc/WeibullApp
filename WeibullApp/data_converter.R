@@ -47,3 +47,17 @@ convert_data <- function(in_data, time = NA, event = NA, n_events = NA, sample =
 list_user_data <- function (filename, path = "./data/user_data/") {
   return(base::list.files(path = path))
 }
+
+save_user_data <- function (filename, data, path = "./data/user_data/") {
+  existing <- list_user_data()
+  if (filename %in% existing) {
+    return(FALSE)
+  } else {
+    readr::write_csv(data, path = paste0(path, filename))
+  }
+}
+
+delete_user_data <- function (filename, path = "./data/user_data/") {
+  
+}
+
