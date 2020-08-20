@@ -51,9 +51,12 @@ list_user_data <- function (filename, path = "./data/user_data/") {
 save_user_data <- function (filename, data, path = "./data/user_data/") {
   existing <- list_user_data()
   if (filename %in% existing) {
+    print("File already exists!")
     return(FALSE)
   } else {
+    print(paste("Saving", filename))
     readr::write_csv(data, path = paste0(path, filename))
+    return(TRUE)
   }
 }
 
