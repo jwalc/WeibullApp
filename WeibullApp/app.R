@@ -58,14 +58,27 @@ ui <- navbarPage(theme = shinytheme("slate"),
         ),
         # --- Upload Data ---
         tabPanel("Import Data",
-                 sidebarLayout(
-                     sidebarPanel(
-                         csvImportUI("import_file")
-                     ),
-                     mainPanel(
-                         dataTableOutput("import_table")
+                 wellPanel(
+                     sidebarLayout(
+                         sidebarPanel(
+                             csvImportUI("import_file")
+                         ),
+                         mainPanel(
+                             dataTableOutput("import_table")
+                         )
+                    )
+                 ),
+                 wellPanel(
+                     sidebarLayout(
+                         sidebarPanel(
+                             "Converter"
+                         ),
+                         mainPanel(
+                             "Result"
+                         )
                      )
-                 ))
+                 )
+        )
     ),
     
     # --- --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
