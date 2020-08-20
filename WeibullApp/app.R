@@ -68,7 +68,10 @@ ui <- navbarPage(theme = shinytheme("slate"),
                  ),
                  mainPanel(width = 10,
                      fluidRow(
-                         plotOutput("paper_plot")
+                         wellPanel(
+                             h3("Plot of estimated Quantiles on Weibull-Paper"),
+                             plotOutput("paper_plot")
+                         )
                      ),
                      fluidRow(
                          column(width = 6,
