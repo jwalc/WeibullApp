@@ -62,17 +62,17 @@ ui <- navbarPage(theme = shinytheme("slate"),
         tabPanel("Import Data",
                  wellPanel(
                      sidebarLayout(
-                         sidebarPanel(
+                         sidebarPanel(width = 3,
                              csvImportUI("import_file")
                          ),
-                         mainPanel(
+                         mainPanel(width = 9,
                              dataTableOutput("import_table")
                          )
                     )
                  ),
                  wellPanel(
                      sidebarLayout(
-                         sidebarPanel(
+                         sidebarPanel(width = 3,
                              uiOutput("convert_controls"),
                              tags$hr(),
                              textInput(inputId = "save_filename",
@@ -81,7 +81,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
                              actionButton(inputId = "save_data",
                                           label = "Save")
                          ),
-                         mainPanel(
+                         mainPanel(width = 9,
                              dataTableOutput("converted_data")
                          )
                      )
