@@ -12,14 +12,14 @@ library(shinythemes)
 library(tidyverse)
 
 # source function files
-source("../quantile_estimators.R")
-source("../plotting_functions.R")
-source("../model.R")
-source("data_converter.R")
+source("functions/quantile_estimators.R")
+source("functions/plotting_functions.R")
+source("functions/model.R")
+source("functions/data_converter.R")
 
 # source Shiny modules
-source("import_csv_module.R")
-source("weibull_explorer_module.R")
+source("modules/import_csv_module.R")
+source("modules/weibull_explorer_module.R")
 
 # set global variables
 expl_time <- seq(0, 200, by = .25)
