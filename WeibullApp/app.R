@@ -16,9 +16,10 @@ source("../quantile_estimators.R")
 source("../plotting_functions.R")
 source("../model.R")
 source("import_csv_module.R")
+source("data_converter_module.R")
 
 # source app component files
-source("weibull_paper_panel.R")
+# source("weibull_paper_panel.R")
 
 
 expl_time <- seq(0, 200, by = .25)
@@ -71,10 +72,10 @@ ui <- navbarPage(theme = shinytheme("slate"),
                  wellPanel(
                      sidebarLayout(
                          sidebarPanel(
-                             "Converter"
+                             uiOutput("convert_controls")
                          ),
                          mainPanel(
-                             "Result"
+                             dataTableOutput("converted_data")
                          )
                      )
                  )
@@ -147,6 +148,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
 server <- function(input, output) {
     
     # --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    # Let the User select a .csv file --- ---
     picked_data <- reactive({
         read_csv(paste0("data/", input$example_data))
     })
