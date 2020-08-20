@@ -8,6 +8,7 @@
 #
 
 library(shiny)
+library(shinythemes)
 library(tidyverse)
 
 # source function files
@@ -23,7 +24,8 @@ expl_time <- seq(0, 200, by = .25)
 example_data_list <- list.files(path = "./data/")
 
 # Define UI for application that draws a histogram
-ui <- navbarPage(title = "WeibullApp",
+ui <- navbarPage(theme = shinytheme("slate"),
+                 title = "WeibullApp",
     # --- --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     navbarMenu(title = "Data Picker",
         # --- Datasets ---
