@@ -9,6 +9,9 @@ xlsxImportUI <- function (id, label = "XLSX Import") {
                   accept = ".csv"),
         tags$hr(),
         uiOutput(ns("select_sheet")),
+        checkboxInput(inputId = ns("col_names"),
+                      label = "Use first row as column names?",
+                      value = TRUE),
         actionButton(inputId = ns("submit"),
                      label = "Submit")
       ),
@@ -39,10 +42,11 @@ xlsxImportServer <- function (id) {
       import_data <- eventReactive(input$submit, {
         req(import_file())
         readxl::read_excel(path = import_file()$datapath,
-                           sheet = input$sheet)
+                           sheet = input$sheet,
+                           col_names = input$col_names)
       })
       
-      output$show_sheet <- renderDataTable({
+      output$show_sheet <- renderDataTable(options = list(scrollX = TRUE), {
         req(import_data())
         import_data()
       })
