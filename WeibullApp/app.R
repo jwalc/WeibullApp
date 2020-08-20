@@ -10,6 +10,7 @@
 library(shiny)
 library(shinythemes)
 library(tidyverse)
+library(readxl)
 
 # source function files
 source("functions/quantile_estimators.R")
@@ -20,6 +21,7 @@ source("functions/data_converter.R")
 # source Shiny modules
 source("modules/import_csv_module.R")
 source("modules/weibull_explorer_module.R")
+source("modules/import_xlsx_module.R")
 
 # set global variables
 example_data_list <- list.files(path = "./data/")
@@ -87,6 +89,11 @@ ui <- navbarPage(theme = shinytheme("slate"),
                              dataTableOutput("converted_data")
                          )
                      )
+                 )
+        ),
+        tabPanel("Import Excel",
+                 wellPanel(
+                    xlsxImportUI("xlsx")
                  )
         )
     ),
@@ -181,6 +188,8 @@ server <- function(input, output) {
     
     # Data Import Panel --- --- ---
     imported_data <- csvImportServer("import_file")
+    
+    imported_data_2 <- xlsxImportServer("xlsx")
     
     # show imported data
     output$import_table <- renderDataTable(options = list(scrollX = TRUE), {
