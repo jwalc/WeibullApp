@@ -1,24 +1,31 @@
-csvImportUI <- function (id, label = "CSV import") {
+csvImportUI <- function (id, label = "CSV Import") {
   ns <- NS(id)
   tagList(
-    fileInput(inputId = ns("file"),
-              label = label,
-              multiple = FALSE,
-              accept = ".csv"),
-    tags$hr(),
-    checkboxInput(inputId = ns("header"),
-                  label = "First line are column names",
-                  value = TRUE),
-    radioButtons(inputId = ns("delimiter"),
-                 label = "Which delimiter is used?",
-                 choices = c(",", ";"),
-                 selected = ","),
-    radioButtons(inputId = ns("decimal"),
-                 label = "Which symbol is used as the decimal point?",
-                 choices = c(".", ","),
-                 selected = "."),
-    tags$hr(),
-    p("Please select a file for importing your data.")
+    sidebarLayout(
+      sidebarPanel(width = 3,
+        fileInput(inputId = ns("file"),
+                  label = label,
+                  multiple = FALSE,
+                  accept = ".csv"),
+        tags$hr(),
+        checkboxInput(inputId = ns("header"),
+                      label = "First line are column names",
+                      value = TRUE),
+        radioButtons(inputId = ns("delimiter"),
+                     label = "Which delimiter is used?",
+                     choices = c(",", ";"),
+                     selected = ","),
+        radioButtons(inputId = ns("decimal"),
+                     label = "Which symbol is used as the decimal point?",
+                     choices = c(".", ","),
+                     selected = "."),
+        tags$hr(),
+        p("Please select a file for importing your data.")
+      ),
+      mainPanel(width = 9,
+        dataTableOutput(ns("show_table"))
+      )
+    )
   )
 }
 
@@ -36,6 +43,11 @@ csvImportServer <- function (id) {
                           delim = input$delimiter,
                           col_names = input$header,
                           locale = locale(decimal_mark = input$decimal))
+      })
+      
+      output$show_table <- renderDataTable(options = list(scrollX = TRUE), {
+        req(import_data())
+        import_data()
       })
       
       return(import_data)
