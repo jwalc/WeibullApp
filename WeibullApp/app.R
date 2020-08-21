@@ -23,6 +23,7 @@ source("modules/import_csv_module.R")
 source("modules/weibull_explorer_module.R")
 source("modules/import_xlsx_module.R")
 source("modules/converter_module.R")
+source("modules/welcome_module.R")
 
 # set global variables
 example_data_list <- list.files(path = "./data/")
@@ -30,7 +31,7 @@ example_data_list <- list.files(path = "./data/")
 # Define UI
 ui <- navbarPage(theme = shinytheme("slate"),
                  title = "WeibullApp",
-    tabPanel(title = "Welcome", "Coming Soon"),
+    tabPanel(title = "Welcome", welcomeUI("welcome")),
     
     # --- --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     navbarMenu(title = "Data Picker",
@@ -137,6 +138,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
 
 # Define server logic
 server <- function(input, output) {
+    welcomeServer("welcome")
     
     # --- Data Picker --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     
@@ -166,7 +168,7 @@ server <- function(input, output) {
     })
     
     output$picked_data <- renderDataTable(options = list(scrollX = TRUE), {
-        req(picked_data())
+        req(picked_data(), available_data())
         picked_data()
         })
     
