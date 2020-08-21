@@ -66,14 +66,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
         # --- Upload Data ---
         tabPanel("Import Data",
                  wellPanel(
-                     sidebarLayout(
-                         sidebarPanel(width = 3,
-                             csvImportUI("import_csv")
-                         ),
-                         mainPanel(width = 9,
-                             dataTableOutput("import_table")
-                         )
-                    )
+                     csvImportUI("import_csv")
                  ),
                  wellPanel(
                      dataConverterUI("convert_csv")
@@ -178,18 +171,12 @@ server <- function(input, output) {
         })
     
     # Data Import Panel --- --- ---
-    imported_data <- csvImportServer("import_csv")
-    
-    imported_data_2 <- xlsxImportServer("import_xlsx")
+    imported_csv <- csvImportServer("import_csv")
+    imported_xlsx <- xlsxImportServer("import_xlsx")
     
     # Data Converter
-    output$import_table <- renderDataTable(options = list(scrollX = TRUE), {
-        req(imported_data())
-        imported_data()
-    })
-    
-    dataConverterServer("convert_csv", imported_data)
-    dataConverterServer("convert_xlsx", imported_data_2)
+    dataConverterServer("convert_csv", imported_csv)
+    dataConverterServer("convert_xlsx", imported_xlsx)
     
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
