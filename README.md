@@ -47,3 +47,8 @@ These have no particular order
  - [] Data Converter Module: can save data without converting it
  - [] Data Converter Module: saves file after changing textInput and without clicking the save button
  - [] Data Picker: shows error message when no files are in data/user_data/
+
+## How to contribute
+For now I do not seek to have any code contributions since this project is
+intended for (my) learning purposes. I do, however, appreciate any kind of
+feedback.
