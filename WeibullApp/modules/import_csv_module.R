@@ -1,3 +1,12 @@
+#' @title Shiny Module for importing CSV Data
+#' 
+#' This module lets the user pick a CSV file (.csv) and import it to the app.
+#' The user can specify the parsing behaviour using UI elements for header, delimiter and decimal point.
+#' The user gets a view of the selected data.
+#' The module returns the data to the app.
+#' 
+#' @return data as a tibble
+
 csvImportUI <- function (id, label = "CSV Import") {
   ns <- NS(id)
   tagList(

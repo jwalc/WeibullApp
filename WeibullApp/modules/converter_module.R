@@ -1,3 +1,12 @@
+#' @title Shiny Module for converting and saving data in WeibullApp
+#' 
+#' The module is used in the WeibullApp to let the user convert imported
+#' data to the currently supported format.
+#' The user is asked to specify which columns are used as time, event, n_events and sample
+#' data and if they are available at all.
+#' After typing a filename the user can press the save button to save the
+#' converted dataframe as a tibble in data/user_data/
+
 dataConverterUI <- function (id, label = "Data Converter") {
   ns <- NS(id)
   tagList(

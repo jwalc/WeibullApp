@@ -1,3 +1,12 @@
+#' @title Shiny Module for importing Excel Data
+#' 
+#' This module lets the user pick an Excel file (.xls or .xlsx) and import it to the app.
+#' The user gets a view of the selected sheet of the file by selecting an available sheet and
+#' clicking the submit button.
+#' The module returns the selected sheet when the user clicks submit.
+#' 
+#' @return sheet of the excel file as a tibble
+
 xlsxImportUI <- function (id, label = "XLSX Import") {
   ns <- NS(id)
   tagList(
@@ -6,7 +15,7 @@ xlsxImportUI <- function (id, label = "XLSX Import") {
         fileInput(inputId = ns("file"),
                   label = label,
                   multiple = FALSE,
-                  accept = ".csv"),
+                  accept = c(".xls", ".xlsx")),
         tags$hr(),
         uiOutput(ns("select_sheet")),
         checkboxInput(inputId = ns("col_names"),
