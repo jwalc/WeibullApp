@@ -1,0 +1,41 @@
+\section{Methods}
+In general the data has to be sorted by increasing time to failure.
+
+\subsection{Weibull Paper}
+
+\subsection{Median Rank Regression}
+The Median Rank method uses uncensored data. Hence it is not able to incorporate information about survivors. 
+We use sorting of the data to assign ranks $i$ in an ascending order. The size of the sample is denoted by $n$. The estimator is then given by
+$$ F_i = \frac{i - 0.3}{n + 0.4}.$$
+
+\subsection{Sudden Death Method}
+The Sudden Death Method is the only method in this project using multiple samples of sizes $n_i$ and $N = \sum_{i}n_i$. The idea is to do multiple experiments (of the same design) and end the experiment after the first failure. Hence the data consists of one failed unit and $n_i - 1$ survivors per sample. We sort the time to failure of the failed units. The ranking of the failed units is then given by
+$$ j_i = j_{i-1} + \Delta j_{i,i-1}, $$
+where
+$$ \Delta j_{i, i-1} = \frac{N + 1 - j_{i-1}}{N + 1 - \sum_{k=1}^{i-1} n_k}.$$
+The quantile estimator is finally given by
+$$ F_i = \frac{j_i - 0.3}{n + 0.4}. $$
+
+\subsection{Kaplan-Meier Method}
+The Kaplan-Meier Method can be used in right-censored data. Again, the data is sorted by time to failure. KM can be used when there are multiple events (survivals and fails) at one time.
+The estimator is given by
+$$ F_i = 1 - \prod_{t_i \leq t} \left( \frac{n_i - d_i}{n_i} \right), $$
+where $n_i$ is the number of units in the experiment up until $t$ and $d_i$ is the number of failed units at the time $t$.
+If the last event consists of failures only, we should use the adjusted estimator
+$$ F_i = 1 - \prod_{t_i \leq t} \left( \frac{n_i - d_i + 1}{n_i + 1} \right) $$
+to avoid a quantile $F_i = 1$. This would lead to an error when transforming the estimation for the linear regression.
+
+\subsection{Nelson Method}
+The Nelson Method can be used on right-censored data. We first assign an inverse Ranking $r_i$ for all of the samples in our data. Then, we compute the failure rate by $\lambda_{\text{Nel}, i}(t) = \frac{1}{r_i}$ for all failed units. The cumulative failure rate is given by $H_{\text{Nel}, i}(t) = \sum_{j=1}^{i} \lambda_{\text{Nel}, i}$. Finally we use the estimator
+$$ F_i(t) = 1 - e^{-H_{\text{Nel}, i}(t)}. $$
+Due to an strictly monotonously increasing $\lambda_{\text{Nel}}$, this method is only suitable for Weibull distributions with $b>0$. (For a derivation of $\lambda_{\text{Nel}}$ please check other sources.)
+
+\subsection{Johnson Method}
+The Johnson Method also incorporates information about survivors. The ranking is given by the following:
+$$ j_i = j_{i-1} + \Delta j_{i,i-1}, $$
+$j_0 = 0$ and
+$$ \Delta j_{i,i-1} = \left( \frac{N + 1 - j_{i-1}}{N + 1 - K} \right) \cdot n_F, $$
+where $n_F$ is the number of failed units at time $t$ and $K$ is the sum of all units that are removed (failures and survivors) from the experiment before time $t$. The quantile estimator is then given by
+$$ F_i = \frac{j_i - 0.3}{n + 0.4}. $$
+
+\subsection{Linear Regression for Estimation of Weibull Parameters}
