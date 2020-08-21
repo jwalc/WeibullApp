@@ -64,7 +64,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
             )
         ),
         # --- Upload Data ---
-        tabPanel("Import Data",
+        tabPanel("Import CSV",
                  wellPanel(
                      csvImportUI("import_csv")
                  ),
