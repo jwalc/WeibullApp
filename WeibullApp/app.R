@@ -2,15 +2,24 @@
 # This is a Shiny web application. You can run the application by clicking
 # the 'Run App' button above.
 #
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
-library(shiny)
-library(shinythemes)
-library(tidyverse)
-library(readxl)
+# Load Packages
+if (!require(shiny)) {
+    install.packages("shiny")
+    require(shiny)
+}
+if (!require(shinythemes)) {
+    install.packages("shinythemes")
+    require(shinythemes)
+}
+if (!require(tidyverse)) {
+    install.packages("tidyverse")
+    require(tidyverse)
+}
+if (!require(readxl)) {
+    install.packages("readxl")
+    require(readxl)
+}
 
 # source function files
 source("functions/quantile_estimators.R")

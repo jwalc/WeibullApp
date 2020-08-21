@@ -54,9 +54,9 @@ welcomeServer <- function (id) {
       
       about_text <- tagList(
         h3("ABOUT"),
-        strong("Author:"), div("Jan Walczak"),
-        strong("GitHub:"), div("GitHubLink"),
-        strong("Documentation PDF:"), div("GitHubLink"),
+        strong("Author:"), a(href = "https://github.com/jwalc", "Jan Walczak"), br(),
+        strong("Repository:"), a(href = "https://github.com/jwalc/WeibullApp", "WeibullApp"), br(),
+        strong("Documentation PDF:"), a(href = "https://github.com/jwalc/WeibullApp/blob/master/documentation/Documentation.pdf", "Documentation"),
         br(),
         p("The WeibullApp is not meant to be used in any serious form. It is a project I do for fun to improve
           my programming skills with R and Shiny. Any feedback is greatly appreciated.")
