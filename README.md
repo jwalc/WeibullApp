@@ -1,10 +1,10 @@
-# Basic Weibull Analysis
+# WeibullApp v0.1
 
 ## About this project
-In this project I try to implement a few simple tools for some basic Weibull
-analysis. At the center of it all are estimation methods for quantiles of
-the Weibull distribution function. These will be used to estimate the parameters
-of the two-parameter Weibull distribution function. The functionalities shall be
+In this project I try to implement a few methods for Weibull parameter
+estimation. At the heart of it all are estimation methods for quantiles of
+the Weibull distribution function. These are used to estimate the parameters
+of the two-parameter Weibull distribution function. The functionalities are
 combined in a ShinyApp. Functionalities will include:
   - Choosing example data sets
   - reading in own data
@@ -20,3 +20,30 @@ accuracy of the results (at least for now). Testing is done by hand at the
 moment but I plan to implement a testing suite in the future.
 
 Any kind of feedback is highly appreciated!
+
+## Whats next?
+High priority:
+  - [] update documentation
+  - [] cleanup code
+  - [] add example datasets
+  - [] tests for estimation functions
+
+Less priority:
+  - [] Parameter Estimation: Pretty print for model output
+  - [] Weibull Paper: new subpanel for saving plots
+  - [] Weibull Explorer: option to show plots with fitted values
+  - [] Weibull Explorer: option to show data as points
+  - [] Import Panels: option to delete user files
+  - [] Import Panels: support input of single vector as time data
+  - [] options to rename columns
+  - [] change labels on plot
+  - [] Weibull Paper: user may change x- and y-limits of plot for "zooming"
+
+## Known Issues
+These have no particular order
+ - [] mr_regression can not handle data with n_events != 1 properly
+ - [] failure rate plot sometimes displays weird jags
+ - [] Weibull Paper: legend disappears on plot when all methods are unselected
+ - [] Data Converter Module: can save data without converting it
+ - [] Data Converter Module: saves file after changing textInput and without clicking the save button
+ - [] Data Picker: shows error message when no files are in data/user_data/
