@@ -22,7 +22,7 @@ if (!require(readxl)) {
 }
 
 # source function files
-source("functions/quantile_estimators.R")
+source("functions/quantile_estimators.R", chdir = TRUE)
 source("functions/plotting_functions.R")
 source("functions/model.R")
 source("functions/data_converter.R")
