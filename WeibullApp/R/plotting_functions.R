@@ -62,7 +62,7 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
                       "Kaplan-Meier" = "#FF9900", "Nelson" = "#CC0033",
                       "Johnson" = "#6666FF")
     w_plot <- ggplot2::ggplot(data = in_data, mapping = aes(x = !!time_, y = !!q_, color = !!method_)) +
-      scale_color_manual(values = color_values)
+      scale_color_manual(name = "Method", values = color_values)
   }
   
   # create scatterplot
@@ -90,7 +90,7 @@ weibull_q_plot <- function (in_data, time = "time", q = "F_i", method = "method"
     for (line in line_list) {
       m_name <- select(line, method) %>% distinct() %>% pull()
       w_plot <- w_plot +
-        geom_line(data = line, aes(x = x, y = y), color = color_values[m_name])
+        geom_line(data = line, aes(x = x, y = y, color = method))
     }
   }
 
