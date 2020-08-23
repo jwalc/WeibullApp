@@ -18,13 +18,25 @@ nelson_method <- function (in_data, time = "time", event = "event", n_events = N
   event_ <- as.symbol(event)
   n_events_ <- as.symbol(n_events)
   
+  if (base::is.null(in_data)) {
+    warning("Input data is NULL!")
+    return()
+  }
+  
+  if (base::nrow(in_data) == 0) {
+    warning("Input data has no rows")
+    return()
+  }
+  
+  df <- in_data
+  
   if (!is.na(n_events)) {
-    # methods needs one event per row
+    # method needs one event per row
     df <- df %>%
       uncount(!!n_events_)
   }
   
-  df <- in_data %>%
+  df <- df %>%
     dplyr::arrange(!!time_) %>%
     dplyr::mutate(rank = base::seq(dplyr::n(), 1)) %>%
     dplyr::filter(!!event_ == 1) %>%
