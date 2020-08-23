@@ -22,10 +22,14 @@ if (!require(readxl)) {
 }
 
 # source function files
-source("R/quantile_estimators.R", chdir = TRUE)
-source("R/plotting_functions.R")
-source("R/model.R")
-source("R/data_converter.R")
+function_files <- list.files(path = "./R/")
+for (f in function_files) {
+    source(paste0("./R/", f))
+}
+# source("R/quantile_estimators.R")
+# source("R/plotting_functions.R")
+# source("R/model.R")
+# source("R/data_converter.R")
 
 # source Shiny modules
 source("modules/import_csv_module.R")
