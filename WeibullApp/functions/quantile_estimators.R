@@ -338,7 +338,7 @@ weibull_estimation <- function(in_data, time = "time", event = "event", n_events
   #' @return tibble with three columns: time, F_i and method
   
   if ("Median Rank" %in% estimation_method) {
-    df_mr <- mr_regression(in_data = in_data, time = time, event = event,
+    df_mr <- mr_regression(in_data = in_data, time = time, event = event, n_events = n_events,
                            simplified = FALSE, append = FALSE)
   } else {
     df_mr <- tibble(time = NULL, F_i = NULL, method = NULL)
