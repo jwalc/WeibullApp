@@ -6,6 +6,4 @@ documentation/*.aux
 documentation/*.log
 documentation/*.gz
 *.Rproj
-test_1.R
-test_2.R
-test_*.R
+/test_*.R
