@@ -23,30 +23,30 @@ Any kind of feedback is highly appreciated!
 
 ## Whats next?
 High priority:
-  - [] update documentation
-  - [] cleanup code
-  - [] add example datasets
-  - [] tests for estimation functions
+  - [ ] update documentation
+  - [ ] cleanup code
+  - [ ] add example datasets
+  - [ ] tests for estimation functions
 
 Less priority:
-  - [] Parameter Estimation: Pretty print for model output
-  - [] Weibull Paper: new subpanel for saving plots
-  - [] Weibull Explorer: option to show plots with fitted values
-  - [] Weibull Explorer: option to show data as points
-  - [] Import Panels: option to delete user files
-  - [] Import Panels: support input of single vector as time data
-  - [] options to rename columns
-  - [] change labels on plot
-  - [] Weibull Paper: user may change x- and y-limits of plot for "zooming"
+  - [ ] Parameter Estimation: Pretty print for model output
+  - [ ] Weibull Paper: new subpanel for saving plots
+  - [ ] Weibull Explorer: option to show plots with fitted values
+  - [ ] Weibull Explorer: option to show data as points
+  - [ ] Import Panels: option to delete user files
+  - [ ] Import Panels: support input of single vector as time data
+  - [ ] options to rename columns
+  - [ ] change labels on plot
+  - [ ] Weibull Paper: user may change x- and y-limits of plot for "zooming"
 
 ## Known Issues
 These have no particular order
- - [] mr_regression can not handle data with n_events != 1 properly
- - [] failure rate plot sometimes displays weird jags
- - [] Weibull Paper: legend disappears on plot when all methods are unselected
- - [] Data Converter Module: can save data without converting it
- - [] Data Converter Module: saves file after changing textInput and without clicking the save button
- - [] Data Picker: shows error message when no files are in data/user_data/
+ - [ ] mr_regression can not handle data with n_events != 1 properly
+ - [ ] failure rate plot sometimes displays weird jags
+ - [ ] Weibull Paper: legend disappears on plot when all methods are unselected
+ - [ ] Data Converter Module: can save data without converting it
+ - [ ] Data Converter Module: saves file after changing textInput and without clicking the save button
+ - [ ] Data Picker: shows error message when no files are in data/user_data/
 
 ## How to contribute
 For now I do not seek to have any code contributions since this project is
