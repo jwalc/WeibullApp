@@ -19,7 +19,7 @@
 #' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
 #' @return tibble, returns a tibble with added columns rank and estimated quantiles
 
-mr_regression <- function (in_data, time = "time", event = "event", n_events = NA, simplified = FALSE, append = FALSE) {
+mr_regression <- function (in_data, time = "time", event = "event", n_events = NA, simplified = FALSE) {
 
   time_ <- base::as.symbol(time)
   event_ <- base::as.symbol(event)
@@ -57,21 +57,11 @@ mr_regression <- function (in_data, time = "time", event = "event", n_events = N
     return(in_data)
   }
   
-  if (append) {
-    if (!all(df[event] == 1)) {
-      warning("mr_regression does not consider right censored data!")
-      df <- dplyr::full_join(in_data, df[c(time, event, "rank", "F_i")], by = c(time, event)) %>%
-        dplyr::arrange(!!time_)
-      df <- df %>%
-        dplyr::select(-c("rank"))
-      df["method"] <- "Median Rank"
-    }
-  } else {
-    df <- df %>%
-      dplyr::select(c(time, "F_i")) %>%
-      dplyr::filter(!is.na(F_i)) %>%
-      dplyr::mutate(method = "Median Rank")
-  }
+  df <- df %>%
+    dplyr::select(c(time, "F_i")) %>%
+    dplyr::filter(!is.na(F_i)) %>%
+    dplyr::mutate(method = "Median Rank")
+
   
   return(df)
 }
