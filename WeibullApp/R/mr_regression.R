@@ -8,8 +8,8 @@
 #'  - 1: time to failure
 #'  - 0: survival (right censored data)
 #'  
-#'  @details This method absolutely needs one(!) event per row. Hence you must specify n_events when
-#'  using method with a Kaplan-Meier-style dataframe. Otherwise the estimator is incorrect!
+#' @details Expects a tibble of supported format. For more info check project documentation or
+#' data_converter
 #' 
 #' @param in_data numeric vector or tibble containing time to failure
 #' @param time character, name of column containing time data
@@ -26,18 +26,18 @@ mr_regression <- function (in_data, time = "time", event = "event", n_events = N
     return()
   }
   
+  if (is.null(in_data)) {
+    warning("Input data is NULL!")
+    return()
+  }
+  
   time_ <- base::as.symbol(time)
   event_ <- base::as.symbol(event)
   n_events_ <- base::as.symbol(n_events)
   
-  df <- input_handler(in_data)
+  df <- in_data
   if (nrow(df) == 0) {
     return()
-  }
-  
-  if (!event %in% names(df)) {
-    warning("Assuming all events are failures.")
-    df[event] <- base::rep(1,base::dim(df)[1])
   }
   
   if (!is.na(n_events)) {
