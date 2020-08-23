@@ -55,35 +55,34 @@ weibull_estimation <- function(in_data, time = "time", event = "event", n_events
   
   if ("Median Rank" %in% estimation_method) {
     df_mr <- mr_regression(in_data = in_data, time = time, event = event, n_events = n_events,
-                           simplified = FALSE, append = FALSE)
+                           simplified = FALSE)
   } else {
     df_mr <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
   
   if ("Sudden Death" %in% estimation_method) {
     df_sd <- johnson_sd_method(in_data = in_data, time = time, event = event,
-                               sample = sample, append = FALSE)
+                               sample = sample)
   } else {
     df_sd <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
   
   if ("Kaplan-Meier" %in% estimation_method) {
     df_km <- kaplan_meier_method(in_data = in_data, time = time, event = event,
-                                 n_events = n_events, append = FALSE)
+                                 n_events = n_events)
   } else {
     df_km <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
   
   if("Nelson" %in% estimation_method) {
-    df_ne <- nelson_method(in_data = in_data, time = time, event = event,
-                           append = FALSE)
+    df_ne <- nelson_method(in_data = in_data, time = time, event = event)
   } else {
     df_ne <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
   
   if ("Johnson" %in% estimation_method) {
     df_jo <- johnson_method(in_data = in_data, time = time, event = event,
-                            n_events = n_events, append = FALSE)
+                            n_events = n_events)
   } else {
     df_jo <- tibble(time = NULL, F_i = NULL, method = NULL)
   }
