@@ -20,14 +20,19 @@
 #' @return tibble, returns a tibble with added columns rank and estimated quantiles
 
 mr_regression <- function (in_data, time = "time", event = "event", n_events = NA, simplified = FALSE) {
-
+  
+  if (!base::is.logical(simplified)) {
+    warning("Invalid input for parameter 'simplified'!")
+    return()
+  }
+  
   time_ <- base::as.symbol(time)
   event_ <- base::as.symbol(event)
   n_events_ <- base::as.symbol(n_events)
   
   df <- input_handler(in_data)
   if (nrow(df) == 0) {
-    return(in_data)
+    return()
   }
   
   if (!event %in% names(df)) {
@@ -46,15 +51,12 @@ mr_regression <- function (in_data, time = "time", event = "event", n_events = N
     dplyr::filter(!!event_ == 1) %>%
     dplyr::mutate(rank = base::seq(1:dplyr::n()))
   
-  if (simplified) {
+  if (base::isTRUE(simplified)) {
     df <- df %>%
       dplyr::mutate(F_i = rank / (dplyr::n() + 1))
-  } else if (!simplified) {
+  } else if (!base::isTRUE(simplified)) {
     df <- df %>%
       dplyr::mutate(F_i = (rank - 0.3) / (dplyr::n() + 0.4))
-  } else {
-    warning("Invalid input for parameter 'simplified'!")
-    return(in_data)
   }
   
   df <- df %>%
