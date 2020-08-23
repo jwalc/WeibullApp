@@ -1,8 +1,8 @@
-source("mr_regression.R")
-source("johnson_sd_method.R")
-source("nelson_method.R")
-source("kaplan_meier_method.R")
-source("johnson_method.R")
+# source("mr_regression.R")
+# source("johnson_sd_method.R")
+# source("nelson_method.R")
+# source("kaplan_meier_method.R")
+# source("johnson_method.R")
 
 input_handler <- function (in_data) {
   #' @title Input Data Handler for Quantile Estimators
