@@ -7,10 +7,9 @@
 #' @param time character, name of the column containing time data
 #' @param event character, name of the column containing event type
 #' @param n_events character, name of the column containing number of events of type at timestamp
-#' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
-#' @return tibble with added quantile estimations
+#' @return tibble with quantile estimations
 
-kaplan_meier_method <- function (in_data, time = "time", event = "event", n_events = "n_events", append = FALSE) {
+kaplan_meier_method <- function (in_data, time = "time", event = "event", n_events = "n_events") {
   
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
@@ -47,13 +46,8 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
   }
   
   df <- df %>%
-    dplyr::select(-c(n_fail, n_i, k_i, km2))
-  
-  if (!append) {
-    df <- df %>%
-      select(c(time, "F_i")) %>%
-      filter(!is.na(F_i))
-  }
+    dplyr::select(c(time, "F_i")) %>%
+    filter(!is.na(F_i))
   
   df["method"] <- "Kaplan-Meier"
   
