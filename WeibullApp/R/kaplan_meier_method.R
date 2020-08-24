@@ -25,9 +25,14 @@ kaplan_meier_method <- function (in_data, time = "time", event = "event", n_even
   n_events_ <- as.symbol(n_events)
   
   df <- in_data %>%
+    dplyr::group_by(!!time_, !!event_) %>%
+    # this makes sure that multiple line with same time and event are combined
+    dplyr::summarise(n_ev = sum(!!n_events_)) %>%
+    dplyr::ungroup() %>%
+    # here the actual method begins
     dplyr::arrange(!!time_) %>%
-    dplyr::mutate(n_fail = base::ifelse(!!event_ == 1, !!n_events_, 0)) %>%
-    dplyr::mutate(n_i = base::sum(!!n_events_) - base::cumsum(!!n_events_) + !!n_events_) %>%
+    dplyr::mutate(n_fail = base::ifelse(!!event_ == 1, n_ev, 0)) %>%
+    dplyr::mutate(n_i = base::sum(n_ev) - base::cumsum(n_ev) + n_ev) %>%
     dplyr::group_by(!!time_) %>%
     dplyr::mutate(n_i = base::max(n_i)) %>%
     dplyr::mutate(km2 = all(!!event_ == 1))
