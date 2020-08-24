@@ -32,6 +32,9 @@ testthat::test_that("Output types", {
   expect_warning(
     expect_true(is.null(kaplan_meier_method(in_data = NULL)))
   )
+  expect_warning(
+    expect_true(is.null(kaplan_meier_method(in_data = tibble(time = NULL, event = NULL, n_events = NULL))))
+  )
   expect_s3_class(kaplan_meier_method(in_data = df_1_in), "tbl_df")
   expect_warning(
     expect_true(is.null(kaplan_meier_method(in_data = df_1_in, time = "Zeit", event = "Ausfall")))
