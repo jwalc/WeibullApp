@@ -26,10 +26,20 @@ mr_regression <- function (in_data, time = "time", event = "event", n_events = N
     return()
   }
   
-  if (is.null(in_data)) {
-    warning("Input data is NULL!")
+  if (is.na(n_events)) {
+    cols <- c(time, event)
+    cols_exist <- cols %in% names(in_data)
+  } else {
+    cols <- c(time, event, n_events)
+    cols_exist <- cols %in% names(in_data)
+  }
+  if (!all(cols_exist)) {
+    warning(paste("The column",
+                  cols[!cols_exist],
+                  "does not exist in the given tibble!\n"))
     return()
   }
+  rm(cols, cols_exist)
   
   time_ <- base::as.symbol(time)
   event_ <- base::as.symbol(event)
