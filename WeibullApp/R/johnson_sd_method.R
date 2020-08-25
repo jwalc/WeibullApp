@@ -13,10 +13,9 @@
 #' @param time character, name of column containing time data
 #' @param event character, name of column containing event type
 #' @param sample character, name of column containing sample identificator
-#' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
 #' @return tibble with added columns rank and estimated quantiles
 
-johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample", append = FALSE) {
+johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample") {
 
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
@@ -45,18 +44,10 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
   }
   
   df <- df %>%
-    dplyr::mutate(F_i = (rank - 0.3) / (N + 0.4))
-  
-  if (append) {
-    df <- dplyr::full_join(in_data, df[c(time, event, sample, "rank", "F_i")], by = c(time, event, sample)) %>%
-      dplyr::arrange(rank)
-    df["method"] <- "Sudden Death"
-  } else {
-    df <- df %>%
-      dplyr::select(c(time, "F_i")) %>%
-      dplyr::filter(!is.na(F_i)) %>%
-      dplyr::mutate(method = "Sudden Death")
-  }
+    dplyr::mutate(F_i = (rank - 0.3) / (N + 0.4)) %>%
+    dplyr::select(c(time, "F_i")) %>%
+    dplyr::filter(!is.na(F_i)) %>%
+    dplyr::mutate(method = "Sudden Death")
   
   return(df)
 }
