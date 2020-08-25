@@ -35,9 +35,9 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
     dplyr::filter(!!event_ == 1)
   
   k <- base::dim(df)[1]
-  df["j"] <- c(as.numeric((N + 1) / (N + 1 - df["n_out"][1,])), base::rep(0, k-1))
+  df["j"] <- c(as.numeric(((N + 1) / (N + 1 - df["n_out"][1,])) * df["n_ev"][1,]), base::rep(0, k-1))
   for (i in 2:k) {
-    delta_j <- ((N + 1 - df["j"][i-1,]) / (N + 1 - df["n_out"][i,])) * df["n_events"][i,]
+    delta_j <- ((N + 1 - df["j"][i-1,]) / (N + 1 - df["n_out"][i,])) * df["n_ev"][i,]
     df["j"][i,] <- df["j"][i-1,] + delta_j
   }
   
