@@ -5,11 +5,14 @@
 ### Added
 - New tests for quantile estimators
 - Added checks for input parameter and warnings to estimator functions
+- Changing x- and y-axis on the plot in "Weibull Paper" panel
 
 ### Changed
 - Start using a projectwide standardised format for datasets
 - Change estimator functions to use the standardised format
 - Fix disappearing legend on Weibull-Plot
+- Changed weibull_q_plot to fit new functionality
+- Weibull Paper panel is a module now
 
 ### Removed
 - Remove append parameter from quantile estimator functions

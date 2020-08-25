@@ -37,7 +37,7 @@ Less priority:
   - [ ] Import Panels: support input of single vector as time data
   - [ ] options to rename columns
   - [ ] change labels on plot
-  - [ ] Weibull Paper: user may change x- and y-limits of plot for "zooming"
+  - [x] Weibull Paper: user may change x- and y-limits of plot for "zooming"
 
 ## Known Issues
 These have no particular order
