@@ -185,15 +185,16 @@ server <- function(input, output) {
         weibull_model(in_data = estimation_data())
     })
     
-    output$lm_results <- renderDataTable(options = list(scrollX = TRUE), {
-        linear_model()
-    })
-    
     weibull_params <- reactive({
         req(linear_model())
         weibull_paramters_from_model(slope = linear_model()$slope,
                                      intercept = linear_model()$intercept,
                                      method = linear_model()$method)
+    })
+    
+    # render datatables --- --- ---
+    output$lm_results <- renderDataTable(options = list(scrollX = TRUE), {
+        linear_model()
     })
     
     output$weibull_params_2 <- renderDataTable(options = list(scrollX = TRUE), {
