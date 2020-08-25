@@ -22,8 +22,13 @@ johnson_method <- function (in_data, time = "time", event = "event", n_events = 
   N <- base::sum(in_data[n_events])
   
   df <- in_data %>%
+    # this makes sure that multiple line with same time and event are combined
+    dplyr::group_by(!!time_, !!event_) %>%
+    dplyr::summarise(n_ev = sum(!!n_events_)) %>%
+    dplyr::ungroup() %>%
+    # here the actual method begins
     dplyr::arrange(!!time_) %>%
-    dplyr::mutate(n_out = base::cumsum(!!n_events_) - !!n_events_) %>%
+    dplyr::mutate(n_out = base::cumsum(n_ev) - n_ev) %>%
     dplyr::group_by(!!time_) %>%
     dplyr::mutate(n_out = base::min(n_out)) %>%
     dplyr::ungroup() %>%
