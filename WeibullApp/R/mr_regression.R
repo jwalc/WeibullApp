@@ -46,9 +46,6 @@ mr_regression <- function (in_data, time = "time", event = "event", n_events = N
   n_events_ <- base::as.symbol(n_events)
   
   df <- in_data
-  if (nrow(df) == 0) {
-    return()
-  }
   
   if (!is.na(n_events)) {
     # methods needs one event per row
