@@ -17,6 +17,21 @@
 
 johnson_sd_method <- function (in_data, time = "time", event = "event", n_events = NA, sample = "sample") {
 
+  if (is.na(n_events)) {
+    cols <- c(time, event, sample)
+    cols_exist <- cols %in% names(in_data)
+  } else {
+    cols <- c(time, event, n_events, sample)
+    cols_exist <- cols %in% names(in_data)
+  }
+  if (!all(cols_exist)) {
+    warning(paste("The column",
+                  cols[!cols_exist],
+                  "does not exist in the given tibble!\n"))
+    return()
+  }
+  rm(cols, cols_exist)
+  
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
   sample_ <- as.symbol(sample)
