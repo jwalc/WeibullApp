@@ -195,6 +195,11 @@ server <- function(input, output) {
     
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    qplot_xlims <- reactive({
+        req(picked_data())
+        weibull_x_limits(picked_data()$time)
+    })
+    
     output$plot_filter <- renderUI({
         methods <- input$methods
         tagList(
@@ -204,7 +209,15 @@ server <- function(input, output) {
                                selected = methods),
             checkboxGroupInput(inputId = "plot_lines",
                                label = "Which regression lines shall be shown?",
-                               choices = methods)
+                               choices = methods),
+            sliderInput(inputId = "xlims",
+                        label = "Modify x-limits",
+                        value = 10^c(qplot_xlims()[1], qplot_xlims()[2]),
+                        min = 10^qplot_xlims()[1], max = 10^qplot_xlims()[2]),
+            sliderInput(inputId = "ylims",
+                        label = "Modify y-limits",
+                        value = c(0.01, 99.99),
+                        min = 0.01, max = 99.99)
         )
     })
     
