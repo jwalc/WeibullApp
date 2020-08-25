@@ -13,20 +13,25 @@
 #' @return tibble with added quantile estimations
 
 nelson_method <- function (in_data, time = "time", event = "event", n_events = NA) {
-
+  
+  if (is.na(n_events)) {
+    cols <- c(time, event)
+    cols_exist <- cols %in% names(in_data)
+  } else {
+    cols <- c(time, event, n_events)
+    cols_exist <- cols %in% names(in_data)
+  }
+  if (!all(cols_exist)) {
+    warning(paste("The column",
+                  cols[!cols_exist],
+                  "does not exist in the given tibble!\n"))
+    return()
+  }
+  rm(cols, cols_exist)
+  
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
   n_events_ <- as.symbol(n_events)
-  
-  if (base::is.null(in_data)) {
-    warning("Input data is NULL!")
-    return()
-  }
-  
-  if (base::nrow(in_data) == 0) {
-    warning("Input data has no rows")
-    return()
-  }
   
   df <- in_data
   
