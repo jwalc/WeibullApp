@@ -37,6 +37,7 @@ source("modules/weibull_explorer_module.R")
 source("modules/import_xlsx_module.R")
 source("modules/converter_module.R")
 source("modules/welcome_module.R")
+source("modules/weibull_paper_module.R")
 
 # set global variables
 example_data_list <- list.files(path = "./data/")
@@ -98,34 +99,7 @@ ui <- navbarPage(theme = shinytheme("slate"),
     
     # --- --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Weibull Paper",
-             sidebarLayout(
-                 sidebarPanel(width = 2,
-                              h4("Select what you want to see on the plot:"),
-                              uiOutput("plot_filter")
-                 ),
-                 mainPanel(width = 10,
-                     fluidRow(
-                         wellPanel(
-                             h3("Plot of estimated Quantiles on Weibull-Paper"),
-                             plotOutput("paper_plot")
-                         )
-                     ),
-                     fluidRow(
-                         column(width = 6,
-                                wellPanel(
-                                    h3("Weibull Parameters"),
-                                    dataTableOutput("weibull_params")
-                                )
-                         ),
-                         column(width = 6,
-                                wellPanel(
-                                    h3("Estimated Quantiles"),
-                                    dataTableOutput("estimation_data")
-                                )
-                         )
-                     )
-                 )
-             )
+             weibullPaperUI("paper")
     ),
     
     # --- --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -195,76 +169,7 @@ server <- function(input, output) {
     
     
     # --- Weibull Paper --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    qplot_xlims <- reactive({
-        req(picked_data())
-        weibull_x_limits(picked_data()$time)
-    })
-    
-    output$plot_filter <- renderUI({
-        methods <- input$methods
-        tagList(
-            checkboxGroupInput(inputId = "plot_points",
-                               label = "Which methods shall be shown on the plot?",
-                               choices = methods,
-                               selected = methods),
-            checkboxGroupInput(inputId = "plot_lines",
-                               label = "Which regression lines shall be shown?",
-                               choices = methods),
-            sliderInput(inputId = "xlims",
-                        label = "Modify x-limits",
-                        value = 10^c(qplot_xlims()[1], qplot_xlims()[2]),
-                        min = 10^qplot_xlims()[1], max = 10^qplot_xlims()[2]),
-            sliderInput(inputId = "ylims",
-                        label = "Modify y-limits",
-                        value = c(0.01, 99.99),
-                        min = 0.01, max = 99.99)
-        )
-    })
-    
-    estimation_data <- reactive({
-        req(picked_data())
-        weibull_estimation(in_data = picked_data(),
-                           estimation_method = input$methods)
-    })
-    
-    output$estimation_data <- renderDataTable(options = list(scrollX = TRUE), {
-        estimation_data()
-    })
-    
-    output$paper_plot <- renderPlot({
-        req(estimation_data(), predicted_paths())
-        weibull_q_plot(in_data = filter(estimation_data(), method %in% input$plot_points),
-                       regr_line = filter(predicted_paths(), method %in% input$plot_lines),
-                       xlim = estimation_data()$time)
-
-    })
-    
-    linear_model <- reactive({
-        req(estimation_data())
-        weibull_model(in_data = estimation_data())
-    })
-    
-    output$lm_results <- renderDataTable(options = list(scrollX = TRUE), {
-        linear_model()
-    })
-    
-    weibull_params <- reactive({
-        req(linear_model())
-        weibull_paramters_from_model(slope = linear_model()$slope,
-                                     intercept = linear_model()$intercept,
-                                     method = linear_model()$method)
-    })
-    
-    output$weibull_params <- output$weibull_params_2 <- renderDataTable(options = list(scrollX = TRUE), {
-        weibull_params()
-    })
-    
-    predicted_paths <- reactive({
-        req(picked_data(), weibull_params())
-        predict_paths(weibull_params(),
-                      x_min = min(estimation_data()$time),
-                      x_max = max(estimation_data()$time))
-    })
+    weibullPaperServer("paper", data = picked_data, methods = reactive({input$methods}))
     
     # --- Parameter Estimation --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     
