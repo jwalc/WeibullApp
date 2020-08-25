@@ -32,7 +32,7 @@ weibullPaperUI <- function (id, label = "Weibull Paper") {
   )
 }
 
-weibullPaperServer <- function (id, data, methods) {
+weibullPaperServer <- function (id, data, methods, quantiles_df, params_df) {
   moduleServer(
     id,
     function (input, output, session) {
@@ -70,50 +70,27 @@ weibullPaperServer <- function (id, data, methods) {
         )
       })
       
-      # estimate quantiles --- --- ---
-      estimation_data <- reactive({
-        req(data())
-        weibull_estimation(in_data = data(),
-                           estimation_method = methods())
-      })
-      
+      # render datatables --- --- ---
       output$estimation_data <- renderDataTable(options = list(scrollX = TRUE), {
-        estimation_data()
+        quantiles_df()
       })
       
-      # calculate parameters --- --- ---
-      linear_model <- reactive({
-        req(estimation_data())
-        weibull_model(in_data = estimation_data())
-      })
-      
-      output$lm_results <- renderDataTable(options = list(scrollX = TRUE), {
-        linear_model()
-      })
-      
-      weibull_params <- reactive({
-        req(linear_model())
-        weibull_paramters_from_model(slope = linear_model()$slope,
-                                     intercept = linear_model()$intercept,
-                                     method = linear_model()$method)
-      })
-      
-      output$weibull_params <- output$weibull_params_2 <- renderDataTable(options = list(scrollX = TRUE), {
-        weibull_params()
+      output$weibull_params <- renderDataTable(options = list(scrollX = TRUE), {
+        params_df()
       })
       
       # predict lines --- --- ---
       predicted_paths <- reactive({
-        req(estimation_data(), weibull_params())
-        predict_paths(weibull_params(),
-                      x_min = min(estimation_data()$time),
-                      x_max = max(estimation_data()$time))
+        req(quantiles_df(), params_df())
+        predict_paths(params_df(),
+                      x_min = min(quantiles_df()$time),
+                      x_max = max(quantiles_df()$time))
       })
       
       # render plot --- --- ---
       output$paper_plot <- renderPlot({
-        req(estimation_data(), predicted_paths())
-        weibull_q_plot(in_data = filter(estimation_data(), method %in% input$plot_points),
+        req(quantiles_df(), predicted_paths())
+        weibull_q_plot(in_data = filter(quantiles_df(), method %in% input$plot_points),
                        regr_line = filter(predicted_paths(), method %in% input$plot_lines),
                        xmin = input$xlims[1], xmax = input$xlims[2],
                        ymin = input$ylims[1], ymax = input$ylims[2])
