@@ -9,6 +9,8 @@
 #' Quantiles are then estimated by:
 #' F_i = (rank_i - 0.3) / (N + 0.4)
 #' 
+#' @details This method can be used for data where there is one failure per sample.
+#' 
 #' @param in_data tibble, containing time to failure, event and sample identification
 #' @param time character, name of column containing time data
 #' @param event character, name of column containing event type
@@ -40,6 +42,10 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", n_events
   df <- in_data
   
   if (!is.na(n_events)) {
+    if (any(df[n_events][df[event] == 1] != 1)) {
+      warning("Sudden Death method can not be used for more than one failure per sample.")
+      return()
+    }
     # methods needs one event per row
     df <- df %>%
       uncount(!!n_events_)
