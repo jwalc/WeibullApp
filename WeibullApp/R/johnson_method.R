@@ -10,14 +10,18 @@
 
 johnson_method <- function (in_data, time = "time", event = "event", n_events = "n_events") {
   
+  cols_exist <- c(time, event, n_events) %in% names(in_data)
+  if (!all(cols_exist)) {
+    warning(paste("The column",
+                  c(time, event, n_events)[!cols_exist],
+                  "does not exist in the given tibble!\n"))
+    return()
+  }
+  rm(cols_exist)
+  
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
   n_events_ <- as.symbol(n_events)
-  
-  if (!n_events %in% names(in_data)) {
-    warning("Invalid 'n_events' argument! Assuming one event per row!")
-    in_data["n_events"] <- rep(1, dim(in_data)[1])
-  }
   
   N <- base::sum(in_data[n_events])
   
