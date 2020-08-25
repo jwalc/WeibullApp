@@ -26,7 +26,7 @@ High priority:
   - [ ] update documentation
   - [ ] cleanup code
   - [ ] add example datasets
-  - [ ] tests for estimation functions
+  - [x] tests for estimation functions
 
 Less priority:
   - [ ] Parameter Estimation: Pretty print for model output
