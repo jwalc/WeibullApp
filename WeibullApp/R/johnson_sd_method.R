@@ -9,25 +9,49 @@
 #' Quantiles are then estimated by:
 #' F_i = (rank_i - 0.3) / (N + 0.4)
 #' 
+#' @details This method can be used for data where there is one failure per sample.
+#' 
 #' @param in_data tibble, containing time to failure, event and sample identification
 #' @param time character, name of column containing time data
 #' @param event character, name of column containing event type
 #' @param sample character, name of column containing sample identificator
-#' @param append boolean, specifying if quantiles should be appended to the given in_data tibble 
 #' @return tibble with added columns rank and estimated quantiles
 
-johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample", append = FALSE) {
+johnson_sd_method <- function (in_data, time = "time", event = "event", n_events = NA, sample = "sample") {
 
+  if (is.na(n_events)) {
+    cols <- c(time, event, sample)
+    cols_exist <- cols %in% names(in_data)
+  } else {
+    cols <- c(time, event, n_events, sample)
+    cols_exist <- cols %in% names(in_data)
+  }
+  if (!all(cols_exist)) {
+    warning(paste("The column",
+                  cols[!cols_exist],
+                  "does not exist in the given tibble!\n"))
+    return()
+  }
+  rm(cols, cols_exist)
+  
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
   sample_ <- as.symbol(sample)
+  n_events_ <- as.symbol(n_events)
   
-  if (!sample %in% names(in_data)) {
-    warning("Sample identification not possible! Did you spell the column name correctly?")
-    return(in_data)
+  df <- in_data
+  
+  if (!is.na(n_events)) {
+    if (any(df[n_events][df[event] == 1] != 1)) {
+      warning("Sudden Death method can not be used for more than one failure per sample.")
+      return()
+    }
+    # methods needs one event per row
+    df <- df %>%
+      uncount(!!n_events_)
   }
   
-  df <- in_data %>%
+  df <- df %>%
     dplyr::group_by(!!sample_) %>%
     dplyr::mutate(n_sample = dplyr::n()) %>%
     dplyr::ungroup() %>%
@@ -45,18 +69,10 @@ johnson_sd_method <- function (in_data, time = "time", event = "event", sample =
   }
   
   df <- df %>%
-    dplyr::mutate(F_i = (rank - 0.3) / (N + 0.4))
-  
-  if (append) {
-    df <- dplyr::full_join(in_data, df[c(time, event, sample, "rank", "F_i")], by = c(time, event, sample)) %>%
-      dplyr::arrange(rank)
-    df["method"] <- "Sudden Death"
-  } else {
-    df <- df %>%
-      dplyr::select(c(time, "F_i")) %>%
-      dplyr::filter(!is.na(F_i)) %>%
-      dplyr::mutate(method = "Sudden Death")
-  }
+    dplyr::mutate(F_i = (rank - 0.3) / (N + 0.4)) %>%
+    dplyr::select(c(time, "F_i")) %>%
+    dplyr::filter(!is.na(F_i)) %>%
+    dplyr::mutate(method = "Sudden Death")
   
   return(df)
 }

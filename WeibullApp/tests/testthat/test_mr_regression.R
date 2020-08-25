@@ -35,7 +35,9 @@ testthat::test_that("Output types", {
     expect_true(is.null(mr_regression(in_data = NULL)))
   )
   expect_s3_class(mr_regression(in_data = df_1_in), "tbl_df")
-  expect_true(is.null(mr_regression(in_data = tibble::tibble(time = NULL))))
+  expect_warning(
+    expect_true(is.null(mr_regression(in_data = tibble::tibble(time = NULL))))
+  )
 })
 
 # --- Testing invalid input parameters --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
