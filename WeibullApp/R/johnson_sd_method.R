@@ -15,18 +15,22 @@
 #' @param sample character, name of column containing sample identificator
 #' @return tibble with added columns rank and estimated quantiles
 
-johnson_sd_method <- function (in_data, time = "time", event = "event", sample = "sample") {
+johnson_sd_method <- function (in_data, time = "time", event = "event", n_events = NA, sample = "sample") {
 
   time_ <- as.symbol(time)
   event_ <- as.symbol(event)
   sample_ <- as.symbol(sample)
+  n_events_ <- as.symbol(n_events)
   
-  if (!sample %in% names(in_data)) {
-    warning("Sample identification not possible! Did you spell the column name correctly?")
-    return(in_data)
+  df <- in_data
+  
+  if (!is.na(n_events)) {
+    # methods needs one event per row
+    df <- df %>%
+      uncount(!!n_events_)
   }
   
-  df <- in_data %>%
+  df <- df %>%
     dplyr::group_by(!!sample_) %>%
     dplyr::mutate(n_sample = dplyr::n()) %>%
     dplyr::ungroup() %>%
