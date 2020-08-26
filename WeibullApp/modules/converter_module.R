@@ -78,9 +78,8 @@ dataConverterServer <- function (id, data) {
       })
       
       # Saving converted data --- ---
-      observe({
-        req(data())
-        if (input$save_data == 0) return()
+      observeEvent(input$save_data, ignoreNULL = TRUE, {
+        req(converted_data(), input$save_filename)
         save_user_data(input$save_filename, converted_data())
       })
     }
