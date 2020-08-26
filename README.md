@@ -30,7 +30,7 @@ High priority:
 
 Less priority:
   - [ ] Parameter Estimation: Pretty print for model output
-  - [ ] Weibull Paper: new subpanel for saving plots
+  - [x] Weibull Paper: option to download plots
   - [ ] Weibull Explorer: option to show plots with fitted values
   - [ ] Weibull Explorer: option to show data as points
   - [ ] Import Panels: option to delete user files

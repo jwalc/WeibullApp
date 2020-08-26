@@ -5,7 +5,8 @@
 ### Added
 - New tests for quantile estimators
 - Added checks for input parameter and warnings to estimator functions
-- Changing x- and y-axis on the plot in "Weibull Paper" panel
+- Changing x- and y-axis on the plot on "Weibull Paper" panel
+- Option to download the plot shown on the "Weibull Paper" panel
 
 ### Changed
 - Start using a projectwide standardised format for datasets
