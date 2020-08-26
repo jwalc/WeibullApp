@@ -13,6 +13,7 @@
 - Fix disappearing legend on Weibull-Plot
 - Changed weibull_q_plot to fit new functionality
 - Weibull Paper panel is a module now
+- Fix dataConverterModule saving before pressing of "save" button
 
 ### Removed
 - Remove append parameter from quantile estimator functions

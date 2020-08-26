@@ -44,8 +44,8 @@ These have no particular order
  - [x] mr_regression can not handle data with n_events != 1 properly
  - [ ] failure rate plot sometimes displays weird jags
  - [x] Weibull Paper: legend disappears on plot when all methods are unselected
- - [ ] Data Converter Module: can save data without converting it
- - [ ] Data Converter Module: saves file after changing textInput and without clicking the save button
+ - [x] Data Converter Module: can save data without converting it
+ - [x] Data Converter Module: saves file after changing textInput and without clicking the save button
  - [ ] Data Picker: shows error message when no files are in data/user_data/
 
 ## How to contribute
