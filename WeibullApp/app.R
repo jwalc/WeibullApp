@@ -38,6 +38,7 @@ source("modules/import_xlsx_module.R")
 source("modules/converter_module.R")
 source("modules/welcome_module.R")
 source("modules/weibull_paper_module.R")
+source("modules/download_plot_module.R")
 
 # set global variables
 example_data_list <- list.files(path = "./data/")
