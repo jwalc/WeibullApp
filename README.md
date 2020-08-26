@@ -38,11 +38,12 @@ Less priority:
   - [ ] options to rename columns
   - [ ] change labels on plot
   - [x] Weibull Paper: user may change x- and y-limits of plot for "zooming"
+  - [ ] Weibull Explorer: prettier version of failure rate plots with low values for T and b > 2
 
 ## Known Issues
 These have no particular order
  - [x] mr_regression can not handle data with n_events != 1 properly
- - [ ] failure rate plot sometimes displays weird jags
+ - [x] failure rate plot sometimes displays weird jags
  - [x] Weibull Paper: legend disappears on plot when all methods are unselected
  - [x] Data Converter Module: can save data without converting it
  - [x] Data Converter Module: saves file after changing textInput and without clicking the save button

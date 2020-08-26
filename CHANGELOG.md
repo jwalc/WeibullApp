@@ -15,6 +15,7 @@
 - Changed weibull_q_plot to fit new functionality
 - Weibull Paper panel is a module now
 - Fix dataConverterModule saving before pressing of "save" button
+- Adds a workaround for the failure rate plot displaying weird jags
 
 ### Removed
 - Remove append parameter from quantile estimator functions
