@@ -9,7 +9,7 @@ weibullExplorerUI <- function (id, label = "Weibull Explorer") {
                                min = 0.1, max = 3, value = 2.5),
                    sliderInput(inputId = ns("param_T"),
                                label = "Choose a value for T",
-                               min = min(expl_time), max = max(expl_time)/2,
+                               min = min(expl_time), max = max(expl_time),
                                value = (max(expl_time) + min(expl_time)/2) / 2)
       ),
       mainPanel(width = 9,
