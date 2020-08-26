@@ -1,10 +1,17 @@
+#' @title Shiny Module for Weibull Paper Panel in WeibullApp
+#' 
+#' 
+
 weibullPaperUI <- function (id, label = "Weibull Paper") {
   ns <- NS(id)
   tagList(
     sidebarLayout(
       sidebarPanel(width = 2,
                    h4("Select what you want to see on the plot:"),
-                   uiOutput(ns("plot_filter"))
+                   uiOutput(ns("plot_filter")),
+                   hr(),
+                   h4("Download the Plot as a .png"),
+                   downloadPlotUI(ns("savePlot"))
       ),
       mainPanel(width = 10,
                 fluidRow(
@@ -88,14 +95,20 @@ weibullPaperServer <- function (id, data, methods, quantiles_df, params_df) {
       })
       
       # render plot --- --- ---
-      output$paper_plot <- renderPlot({
+      paper_plot <- reactive({
         req(quantiles_df(), predicted_paths())
         weibull_q_plot(in_data = filter(quantiles_df(), method %in% input$plot_points),
                        regr_line = filter(predicted_paths(), method %in% input$plot_lines),
                        xmin = input$xlims[1], xmax = input$xlims[2],
                        ymin = input$ylims[1], ymax = input$ylims[2])
-        
       })
+      output$paper_plot <- renderPlot({
+        req(paper_plot())
+        paper_plot()
+      })
+      
+      # save plot --- --- ---
+      downloadPlotServer("savePlot", paper_plot)
     }
   )
 }
