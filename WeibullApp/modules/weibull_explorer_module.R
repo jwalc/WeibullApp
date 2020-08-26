@@ -55,7 +55,18 @@ weibullExplorerServer <- function (id) {
       })
       
       output$plot_lambda <- renderPlot({
-        ggplot(data = expl_data(), aes(x = x, y = lambda)) +
+        df <- expl_data()
+        # current workaround for plot showing jags
+        if (input$param_b > 2) {
+          df <- df %>%
+            dplyr::filter(lambda < Inf) %>%
+            dplyr::arrange(lambda)
+          while (sum(diff(df$x) <= 0) > 0) {
+            df <- df[which(diff(df$x) > 0), ]
+          }
+        }
+        
+        ggplot(data = df, aes(x = x, y = lambda)) +
           geom_line() +
           labs(x = "time", y = expression(lambda(t)), title = "Failure Rate") +
           xlim(min(expl_time), max(expl_time))
