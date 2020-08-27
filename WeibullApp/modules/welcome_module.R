@@ -48,7 +48,8 @@ welcomeServer <- function (id) {
           and estimated parameters per method."),
         p("4. For more model details choose the 'Parameter Estimation' Panel. There you can additionally view results from the
           underlying linear regression."),
-        p("5. If you want to explore the effects the parameters b and T have on shape and form of the Weibull distribution, density
+        p("5. Try to fit a distribution line for the data in the 'Fit your model' panel by changing the Weibull parameters manually."),
+        p("6. If you want to explore the effects the parameters b and T have on shape and form of the Weibull distribution, density
           and failure rate functions, go to the 'Weibull Explorer' panel.")
       )
       
