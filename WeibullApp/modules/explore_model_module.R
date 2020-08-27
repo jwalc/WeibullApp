@@ -72,6 +72,38 @@ exploreModelServer <- function (id, estimated_quantiles, model_data, weibull_par
           filter(method %in% input$filter)
       })
       
+      # calculate R^2
+      transformed_data <- reactive({
+        estimated_quantiles() %>%
+          mutate(y_transform = log(log(1 / (1 - F_i))),
+                 x_transform = log(time))
+      })
+      
+      r_squared <- eventReactive(input$param_b | input$param_T, {
+        result <- tibble(method = NULL,
+                         R_squared = NULL)
+        
+        for (m in methods()) {
+          params <- model_data() %>%
+            filter(method == m)
+          
+          df <- transformed_data() %>%
+            filter(method == m) %>%
+            mutate(residuals = y_transform - (- input$param_b * base::log(input$param_T) + input$param_b * x_transform))
+          
+          y_bar <- mean(df$y_transform)
+          
+          SSR <- sum((df$residuals)^2)
+          SST <- sum((df$y_transform - y_bar)^2)
+
+          result <- rbind(result, tibble(
+            method = m,
+            R_squared = 1 - (SSR/SST)
+          ))
+        }
+        result
+      })
+      
       # render Plot ---
       distr_line <- reactive({
         tibble(time = seq(0, time_limit(), length.out = 1000),
