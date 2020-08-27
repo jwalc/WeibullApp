@@ -132,11 +132,16 @@ exploreModelServer <- function (id, estimated_quantiles, model_data, weibull_par
                F = pweibull(time, shape = input$param_b, scale = input$param_T))
       })
       
+      color_values <- c("Median Rank" = "#999933", "Sudden Death" = "#33CC00",
+                        "Kaplan-Meier" = "#FF9900", "Nelson" = "#CC0033",
+                        "Johnson" = "#6666FF")
+      
       output$distr_plot <- renderPlot({
         ggplot2::ggplot(data = distr_line(), aes(x = time, y = F)) +
           geom_line() +
           geom_point(data = filtered_data(), mapping = aes(x = time, y = F_i, color = method)) +
           ylim(c(0, 1)) +
+          scale_color_manual(name = "Method", values = color_values) +
           labs(title = "Weibull Fit",
                x = "time",
                y = "Quantiles")
