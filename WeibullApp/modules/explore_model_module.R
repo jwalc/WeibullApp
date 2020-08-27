@@ -70,6 +70,7 @@ exploreModelServer <- function (id, estimated_quantiles, model_data, weibull_par
                       label = "b",
                       min = 0.1,
                       max = 5,
+                      step = 0.01,
                       value = 1),
           sliderInput(inputId = session$ns("param_T"),
                       label = "T",
