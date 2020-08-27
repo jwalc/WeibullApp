@@ -41,7 +41,7 @@ Less priority:
   - [ ] Import Panels: option to delete user files
   - [ ] Import Panels: support input of single vector as time data
   - [ ] options to rename columns
-  - [ ] change labels on plot
+  - [x] change labels on plot
   - [x] Weibull Paper: user may change x- and y-limits of plot for "zooming"
   - [ ] Weibull Explorer: prettier version of failure rate plots with low values for T and b > 2
 

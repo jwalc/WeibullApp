@@ -8,6 +8,7 @@
 - Changing x- and y-axis on the plot on "Weibull Paper" panel
 - Option to download the plot shown on the "Weibull Paper" panel
 - When saving converted data, the app shows a message on the save status
+- Change labels on Weibull Paper plot
 
 ### Changed
 - Start using a projectwide standardised format for datasets
