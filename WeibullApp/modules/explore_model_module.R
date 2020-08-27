@@ -120,12 +120,16 @@ exploreModelServer <- function (id, estimated_quantiles, model_data, weibull_par
                y = "Quantiles")
       })
       
-      # render dataTables ---
-      output$regr_results <- renderDataTable({
+      # render Tables ---
+      output$regr_results <- renderTable({
         model_data() %>%
           dplyr::full_join(., weibull_params(), by = "method") %>%
           dplyr::select(method, b, T, R_squared) %>%
           dplyr::arrange(desc(R_squared))
+      })
+        
+      output$r_squared <- renderTable({
+        r_squared()
       })
     }
   )
