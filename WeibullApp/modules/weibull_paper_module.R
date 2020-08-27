@@ -115,12 +115,29 @@ weibullPaperServer <- function (id, data, methods, quantiles_df, params_df) {
       })
       
       # render plot --- --- ---
+      plot_labels <- eventReactive(input$apply_labels, ignoreNULL = FALSE, {
+        labels <- ggplot2::labs(caption = "WeibullApp")
+        if (input$plot_title != "") {
+          labels$title <- input$plot_title
+        }
+        if (input$plot_subtitle != "") {
+          labels$subtitle <- input$plot_subtitle
+        }
+        if (input$plot_xlabel != "") {
+          labels$x <- input$plot_xlabel
+        }
+        if (input$plot_ylabel != "") {
+          labels$y <- input$plot_ylabel
+        }
+        labels
+      })
       paper_plot <- reactive({
         req(quantiles_df(), predicted_paths())
         weibull_q_plot(in_data = filter(quantiles_df(), method %in% input$plot_points),
                        regr_line = filter(predicted_paths(), method %in% input$plot_lines),
                        xmin = input$xlims[1], xmax = input$xlims[2],
-                       ymin = input$ylims[1], ymax = input$ylims[2])
+                       ymin = input$ylims[1], ymax = input$ylims[2]) +
+          plot_labels()
       })
       output$paper_plot <- renderPlot({
         req(paper_plot())
