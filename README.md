@@ -21,6 +21,11 @@ moment but I plan to implement a testing suite in the future.
 
 Any kind of feedback is highly appreciated!
 
+## How to use
+1. Download the repository or just the WeibullApp directory.
+2. Start an R session and set the working directory to the WeibullApp directory (using ```setwd()```)
+3. run ```run("app.R")```
+
 ## Whats next?
 High priority:
   - [ ] update documentation
