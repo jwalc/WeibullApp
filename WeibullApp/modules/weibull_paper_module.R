@@ -7,8 +7,28 @@ weibullPaperUI <- function (id, label = "Weibull Paper") {
   tagList(
     sidebarLayout(
       sidebarPanel(width = 2,
+                   # Filtering methods --- ---
                    h4("Select what you want to see on the plot:"),
                    uiOutput(ns("plot_filter")),
+                   
+                   # Changing labels --- ---
+                   h4("Change labels"),
+                   textInput(ns("plot_title"),
+                             label = "Title:",
+                             placeholder = "Title"),
+                   textInput(ns("plot_subtitle"),
+                             label = "Subtitle",
+                             placeholder = "Subtitle"),
+                   textInput(ns("plot_xlabel"),
+                             label = ("x-axis"),
+                             placeholder = "x-axis"),
+                   textInput(ns("plot_ylabel"),
+                             label = "y-axis",
+                             placeholder = "y-axis"),
+                   actionButton(ns("apply_labels"),
+                                label = "Apply changes"),
+                   
+                   # Download plot --- ---
                    hr(),
                    h4("Download the Plot as a .png"),
                    downloadPlotUI(ns("savePlot"))
