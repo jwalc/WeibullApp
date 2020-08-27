@@ -37,7 +37,7 @@ Less priority:
   - [ ] Parameter Estimation: Pretty print for model output
   - [x] Weibull Paper: option to download plots
   - [ ] Weibull Explorer: option to show plots with fitted values
-  - [ ] Weibull Explorer: option to show data as points
+  - [x] Weibull Explorer: option to show data as points
   - [ ] Import Panels: option to delete user files
   - [ ] Import Panels: support input of single vector as time data
   - [ ] options to rename columns

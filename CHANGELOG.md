@@ -9,6 +9,7 @@
 - Option to download the plot shown on the "Weibull Paper" panel
 - When saving converted data, the app shows a message on the save status
 - Change labels on Weibull Paper plot
+- New panel where the user can try to fit a distribution line for their data
 
 ### Changed
 - Start using a projectwide standardised format for datasets
