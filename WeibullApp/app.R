@@ -39,11 +39,13 @@ source("modules/converter_module.R")
 source("modules/welcome_module.R")
 source("modules/weibull_paper_module.R")
 source("modules/download_plot_module.R")
+source("modules/explore_model_module.R")
 
 # set global variables
 example_data_list <- list.files(path = "./data/")
 
-# Define UI
+# Define UI ----------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 ui <- navbarPage(theme = shinytheme("slate"),
                  title = "WeibullApp",
     tabPanel(title = "Welcome", welcomeUI("welcome")),
@@ -118,13 +120,19 @@ ui <- navbarPage(theme = shinytheme("slate"),
              )
     ),
     
+    # --- --- Fit your Model --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    tabPanel("Fit your model",
+             exploreModelUI("exploreModel")
+    ),
+    
     # --- --- Weibull Explorer --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     tabPanel("Weibull Explorer", 
              weibullExplorerUI("explorer")
     )
 )
 
-# Define server logic
+# Define server logic ------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 server <- function(input, output) {
     welcomeServer("welcome")
     
@@ -204,6 +212,7 @@ server <- function(input, output) {
     
     # --- Weibull Explorer --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     weibullExplorerServer("explorer")
+    exploreModelServer("exploreModel", estimation_data, linear_model, weibull_params)
 }
 
 # Run the application 
