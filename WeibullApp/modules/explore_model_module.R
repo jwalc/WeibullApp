@@ -4,6 +4,7 @@
 exploreModelUI <- function (id, label = "Explore Model") {
   ns <- NS(id)
   tagList(
+    withMathJax(),
     sidebarLayout(
       sidebarPanel(
         # Choose Weibull Parameters ---
@@ -18,11 +19,31 @@ exploreModelUI <- function (id, label = "Explore Model") {
       ),
       mainPanel(
         # plot output ---
-        plotOutput(ns("distr_plot")),
+        wellPanel(
+          plotOutput(ns("distr_plot"))
+        ),
         # show R^2 ---
-        
+        wellPanel(  
+          fluidRow(
+            column(3,
+                   h3("$$R^2$$ for your selected parameters:", align = "center")
+            ),
+            column(9,
+                   tableOutput(ns("r_squared"))
+            )
+          )
+        ),
         # show dataTables
-        dataTableOutput(ns("regr_results"))
+        wellPanel(
+          fluidRow(
+            column(3,
+                   h3("Best fit using linear regression on transformed data:", align = "center")
+            ),
+            column(9,
+                   tableOutput(ns("regr_results"))
+            )
+          )
+        )
       )
     )
   )
