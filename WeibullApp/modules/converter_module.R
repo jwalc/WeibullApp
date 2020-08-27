@@ -80,7 +80,12 @@ dataConverterServer <- function (id, data) {
       # Saving converted data --- ---
       observeEvent(input$save_data, ignoreNULL = TRUE, {
         req(converted_data(), input$save_filename)
-        save_user_data(input$save_filename, converted_data())
+        success <- save_user_data(input$save_filename, converted_data())
+        if (success) {
+          showNotification("Your file was saved successfully.", type = "message")
+        } else {
+          showNotification("Save failed! Filename already exists!", type = "error")
+        }
       })
     }
   )
